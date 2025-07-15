@@ -1,0 +1,3114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 AWS Quest - Pixel Adventure</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Pixel Art Color Palette */
+            --pixel-blue: #0066ff;
+            --pixel-red: #ff0044;
+            --pixel-green: #00cc44;
+            --pixel-yellow: #ffcc00;
+            --pixel-purple: #8844ff;
+            --pixel-cyan: #00ffcc;
+            --pixel-orange: #ff8800;
+            --pixel-pink: #ff44cc;
+            
+            /* Background Colors */
+            --bg-dark: #1a1a2e;
+            --bg-darker: #16213e;
+            --bg-darkest: #0f0f23;
+            
+            /* Text Colors */
+            --text-white: #ffffff;
+            --text-light: #f0f0f0;
+            --text-gray: #aaaaaa;
+            
+            /* Pixel Borders */
+            --border-light: #666666;
+            --border-dark: #333333;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            line-height: 1.5;
+            background: var(--bg-darkest);
+            color: var(--text-white);
+            user-select: none;
+        }
+
+        /* Pixel Art Base Classes */
+        .pixel-box {
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            background: var(--bg-dark);
+        }
+
+        .pixel-button {
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            background: var(--bg-darker);
+            color: var(--text-white);
+            font-family: 'Press Start 2P', monospace;
+            font-size: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: none;
+        }
+
+        .pixel-button:hover {
+            background: var(--pixel-blue);
+            border-top-color: var(--pixel-cyan);
+            border-left-color: var(--pixel-cyan);
+        }
+
+        .pixel-button:active {
+            border-top-color: var(--border-dark);
+            border-left-color: var(--border-dark);
+            border-right-color: var(--text-white);
+            border-bottom-color: var(--text-white);
+        }
+
+        /* Pixel Game Canvas */
+        #game-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            background: linear-gradient(45deg, var(--bg-darkest) 0%, var(--bg-darker) 50%, var(--bg-dark) 100%);
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .ui-overlay > * {
+            pointer-events: auto;
+        }
+
+        /* Pixel Game HUD */
+        .game-hud {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 48px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+        }
+
+        /* Pixel Health/Mana Bars */
+        .pixel-bar {
+            width: 64px;
+            height: 8px;
+            background: var(--border-dark);
+            border: 1px solid var(--border-light);
+            position: relative;
+            margin: 2px 0;
+        }
+
+        .pixel-bar-fill {
+            height: 100%;
+            background: var(--pixel-green);
+            transition: width 0.3s linear;
+        }
+
+        .pixel-bar-fill.hp { background: var(--pixel-red); }
+        .pixel-bar-fill.mp { background: var(--pixel-blue); }
+        .pixel-bar-fill.exp { background: var(--pixel-yellow); }
+
+        /* Welcome Screen Pixel Art */
+        .pixel-welcome-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darkest);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .pixel-welcome-screen.hidden {
+            display: none;
+        }
+
+        .pixel-title-box {
+            padding: 32px;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .pixel-title {
+            font-size: 24px;
+            color: var(--pixel-yellow);
+            margin-bottom: 16px;
+            text-shadow: 2px 2px 0px var(--border-dark);
+        }
+
+        .pixel-subtitle {
+            font-size: 12px;
+            color: var(--pixel-cyan);
+            text-shadow: 1px 1px 0px var(--border-dark);
+        }
+
+        .pixel-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .pixel-menu .pixel-button {
+            width: 200px;
+            padding: 12px 24px;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        /* Game HUD Pixel Style */
+        .pixel-hud {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            height: 64px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 16px;
+            font-size: 8px;
+        }
+
+        .pixel-character {
+            width: 32px;
+            height: 32px;
+            background: var(--pixel-blue);
+            border: 1px solid var(--text-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            margin-right: 16px;
+        }
+
+        .pixel-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .pixel-stat-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 8px;
+        }
+
+        .pixel-stat-label {
+            width: 32px;
+            color: var(--text-light);
+        }
+
+        /* Battle Interface Pixel Art */
+        .pixel-battle-screen {
+            position: absolute;
+            bottom: 8px;
+            left: 8px;
+            right: 8px;
+            height: 200px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 16px;
+            display: none;
+        }
+
+        .pixel-battle-screen.active {
+            display: block;
+        }
+
+        .pixel-question {
+            background: var(--bg-darker);
+            border: 1px solid var(--border-light);
+            padding: 8px;
+            margin-bottom: 16px;
+            font-size: 8px;
+            line-height: 1.4;
+        }
+
+        .pixel-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .pixel-option {
+            background: var(--bg-darker);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px;
+            font-size: 8px;
+            color: var(--text-white);
+            cursor: pointer;
+            transition: none;
+        }
+
+        .pixel-option:hover {
+            background: var(--pixel-blue);
+        }
+
+        .pixel-option.selected {
+            background: var(--pixel-yellow);
+            color: var(--bg-darkest);
+        }
+
+        .pixel-option.correct {
+            background: var(--pixel-green);
+            border-color: var(--pixel-green);
+        }
+
+        .pixel-option.incorrect {
+            background: var(--pixel-red);
+            border-color: var(--pixel-red);
+        }
+
+        /* Level Selection Screen */
+        .pixel-level-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darkest);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .pixel-level-screen.active {
+            display: flex;
+        }
+
+        .level-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin: 32px 0;
+        }
+
+        .level-card {
+            width: 200px;
+            height: 120px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 16px;
+            cursor: pointer;
+            transition: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .level-card:hover {
+            background: var(--pixel-blue);
+        }
+
+        .level-card.locked {
+            background: var(--border-dark);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .level-title {
+            font-size: 10px;
+            color: var(--pixel-yellow);
+            margin-bottom: 8px;
+        }
+
+        .level-description {
+            font-size: 8px;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        .level-stats {
+            font-size: 8px;
+            color: var(--pixel-cyan);
+            margin-top: 8px;
+        }
+
+        /* Enhanced HUD */
+        .pixel-level-indicator {
+            position: absolute;
+            top: 80px;
+            left: 8px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px 16px;
+            font-size: 8px;
+            color: var(--pixel-yellow);
+        }
+
+        /* Animations */
+        @keyframes pixelPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pixel-pulse {
+            animation: pixelPulse 1s infinite;
+        }
+
+        @keyframes pixelShake {
+            0%, 100% { transform: translate(0); }
+            25% { transform: translate(2px, 2px); }
+            50% { transform: translate(-2px, 2px); }
+            75% { transform: translate(2px, -2px); }
+        }
+
+        .pixel-shake {
+            animation: pixelShake 0.3s;
+        }
+
+        /* Special Abilities Panel */
+        .abilities-panel {
+            position: absolute;
+            top: 80px;
+            right: 8px;
+            width: 200px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px;
+            display: none;
+        }
+
+        .abilities-panel.active {
+            display: block;
+        }
+
+        .ability-button {
+            width: 100%;
+            margin-bottom: 4px;
+            padding: 8px;
+            font-size: 8px;
+            background: var(--bg-darker);
+            border: 1px solid var(--border-light);
+            color: var(--text-white);
+            cursor: pointer;
+            transition: none;
+        }
+
+        .ability-button:hover:not(.disabled) {
+            background: var(--pixel-blue);
+        }
+
+        .ability-button.disabled {
+            background: var(--border-dark);
+            color: var(--text-gray);
+            cursor: not-allowed;
+        }
+
+        .ability-cost {
+            float: right;
+            color: var(--pixel-cyan);
+        }
+
+        /* Combo System */
+        .combo-display {
+            position: absolute;
+            top: 150px;
+            left: 8px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px 16px;
+            font-size: 8px;
+            color: var(--pixel-yellow);
+            display: none;
+        }
+
+        .combo-display.active {
+            display: block;
+        }
+
+        .combo-number {
+            font-size: 12px;
+            color: var(--pixel-orange);
+        }
+
+        /* Timer Display */
+        .timer-display {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px 16px;
+            font-size: 10px;
+            color: var(--pixel-red);
+            display: none;
+        }
+
+        .timer-display.active {
+            display: block;
+        }
+
+        .timer-warning {
+            animation: pixelPulse 0.5s infinite;
+            color: var(--pixel-red);
+        }
+
+        /* Battle Type Indicators */
+        .battle-type-indicator {
+            position: absolute;
+            top: 200px;
+            left: 8px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            padding: 8px 16px;
+            font-size: 8px;
+            display: none;
+        }
+
+        .battle-type-indicator.active {
+            display: block;
+        }
+
+        .battle-type-normal { color: var(--text-white); }
+        .battle-type-boss { color: var(--pixel-red); }
+        .battle-type-speed { color: var(--pixel-yellow); }
+        .battle-type-endurance { color: var(--pixel-green); }
+
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .character-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+            border: 3px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+        }
+
+        .character-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .stat-bar {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            min-width: 60px;
+        }
+
+        .progress-bar {
+            width: 150px;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--secondary-purple));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+
+        .hp-fill {
+            background: linear-gradient(90deg, var(--danger-red), #fbbf24);
+        }
+
+        .mp-fill {
+            background: linear-gradient(90deg, var(--secondary-purple), var(--primary-blue));
+        }
+
+        .hud-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+        
+        .pixel-level, .pixel-score, .pixel-progress {
+            font-size: 10px;
+            font-weight: bold;
+            color: var(--text-white);
+        }
+        
+        .pixel-progress {
+            color: var(--pixel-cyan);
+            font-size: 8px;
+        }
+
+        .level-display {
+            background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .score-display {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+
+        /* Battle UI */
+        .battle-interface {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 300px;
+            background: linear-gradient(0deg, rgba(10, 10, 15, 0.98) 0%, rgba(10, 10, 15, 0.85) 100%);
+            backdrop-filter: blur(15px);
+            border-top: 2px solid var(--border-glow);
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 1.5rem;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.8);
+        }
+
+        .battle-interface.active {
+            display: flex;
+        }
+
+        .question-display {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+
+        .difficulty-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .diff-easy { background: rgba(16, 185, 129, 0.2); color: var(--success-green); }
+        .diff-medium { background: rgba(251, 191, 36, 0.2); color: var(--accent-gold); }
+        .diff-hard { background: rgba(239, 68, 68, 0.2); color: var(--danger-red); }
+
+        .question-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+
+        .battle-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .battle-option {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(139, 92, 246, 0.1));
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .battle-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .battle-option:hover::before {
+            left: 100%;
+        }
+
+        .battle-option:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .battle-option.selected {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(245, 158, 11, 0.2));
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+        }
+
+        .battle-option.correct {
+            border-color: var(--success-green);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(5, 150, 105, 0.3));
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+        }
+
+        .battle-option.incorrect {
+            border-color: var(--danger-red);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.3), rgba(220, 38, 38, 0.3));
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.6);
+        }
+
+        .option-letter {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Action Buttons */
+        .battle-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .rpg-button {
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .rpg-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+            transform: translate(-50%, -50%);
+        }
+
+        .rpg-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .rpg-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 212, 255, 0.6);
+        }
+
+        .rpg-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #4b5563, #6b7280);
+            box-shadow: 0 8px 25px rgba(75, 85, 99, 0.4);
+        }
+
+        .btn-secondary:hover {
+            box-shadow: 0 12px 35px rgba(75, 85, 99, 0.6);
+        }
+
+        /* Inventory Panel */
+        .inventory-panel {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            width: 300px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(15px);
+            display: none;
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .inventory-panel.active {
+            display: block;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+
+        /* Map System */
+        .map-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            height: 250px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 1rem;
+            backdrop-filter: blur(15px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .map-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.8);
+        }
+
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            height: 140px;
+            margin-bottom: 1rem;
+        }
+
+        .map-region {
+            background: linear-gradient(45deg, var(--bg-darker), var(--secondary-purple));
+            border: 1px solid var(--border-glow);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.7rem;
+            text-align: center;
+            padding: 4px;
+            position: relative;
+        }
+
+        .map-region:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--primary-blue);
+        }
+
+        .map-region.current {
+            background: linear-gradient(45deg, var(--accent-gold), var(--primary-blue));
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px var(--accent-gold);
+        }
+
+        .map-region.unlocked {
+            background: linear-gradient(45deg, var(--secondary-purple), var(--primary-blue));
+        }
+
+        .map-region.locked {
+            background: linear-gradient(45deg, var(--bg-darker), #333);
+            color: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .region-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+
+        .exploration-progress {
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-darker);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 0.5rem;
+            border: 1px solid var(--border-glow);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-gold));
+            transition: width 0.5s ease;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .inventory-slot {
+            aspect-ratio: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .inventory-slot:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+        }
+
+        .inventory-slot.occupied {
+            background: linear-gradient(135deg, var(--accent-gold), #f59e0b);
+            border-color: var(--accent-gold);
+        }
+
+        .item-icon {
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 5px rgba(251, 191, 36, 0.8));
+        }
+
+        /* Character Stats Panel */
+        .stats-panel {
+            position: absolute;
+            top: 100px;
+            left: 20px;
+            width: 280px;
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid var(--border-glow);
+            border-radius: 16px;
+            padding: 1.5rem;
+            backdrop-filter: blur(15px);
+            display: none;
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .stats-panel.active {
+            display: block;
+        }
+
+        .character-portrait {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple));
+            border: 3px solid var(--accent-gold);
+            margin: 0 auto 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
+        }
+
+        .character-name {
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--accent-gold);
+            margin-bottom: 1rem;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-name {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-value {
+            color: var(--text-light);
+            font-weight: bold;
+            font-family: 'Orbitron', monospace;
+        }
+
+        /* Welcome Screen */
+        .welcome-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--bg-darker) 0%, var(--bg-dark) 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+        }
+
+        .welcome-screen.hidden {
+            display: none;
+        }
+
+        .game-logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 4rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-purple), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.8);
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.8)); }
+            to { filter: drop-shadow(0 0 40px rgba(139, 92, 246, 0.8)); }
+        }
+
+        .game-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-muted);
+            text-align: center;
+            margin-bottom: 3rem;
+            max-width: 600px;
+        }
+
+        .welcome-actions {
+            display: flex;
+            gap: 2rem;
+        }
+
+        /* Particle Effects */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary-blue);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float 8s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--primary-blue);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.7; }
+            25% { transform: translateY(-100px) translateX(50px); opacity: 1; }
+            50% { transform: translateY(-50px) translateX(-75px); opacity: 0.5; }
+            75% { transform: translateY(-150px) translateX(25px); opacity: 0.8; }
+        }
+
+        /* Damage/Heal Numbers */
+        .damage-number {
+            position: absolute;
+            font-family: 'Orbitron', monospace;
+            font-weight: bold;
+            font-size: 2rem;
+            z-index: 15;
+            pointer-events: none;
+            animation: damageFloat 2s ease-out forwards;
+        }
+
+        .damage {
+            color: var(--danger-red);
+            text-shadow: 0 0 10px var(--danger-red);
+        }
+
+        .heal {
+            color: var(--success-green);
+            text-shadow: 0 0 10px var(--success-green);
+        }
+
+        .experience {
+            color: var(--accent-gold);
+            text-shadow: 0 0 10px var(--accent-gold);
+        }
+
+        @keyframes damageFloat {
+            0% {
+                transform: translateY(0px) scale(0.5);
+                opacity: 1;
+            }
+            50% {
+                transform: translateY(-50px) scale(1.2);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .game-hud {
+                height: 70px;
+                padding: 0 1rem;
+            }
+            
+            .hud-left {
+                gap: 1rem;
+            }
+            
+            .character-avatar {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+            
+            .progress-bar {
+                width: 100px;
+            }
+            
+            .battle-interface {
+                height: 250px;
+                padding: 1rem;
+            }
+            
+            .battle-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .inventory-panel,
+            .stats-panel {
+                width: 250px;
+            }
+            
+            .game-logo {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Auth Forms */
+        .pixel-auth-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-darkest);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 25;
+        }
+
+        .pixel-auth-screen.hidden {
+            display: none;
+        }
+
+        .pixel-form {
+            max-width: 400px;
+            width: 90%;
+            padding: 24px;
+            background: var(--bg-dark);
+            border: 2px solid var(--border-light);
+            border-top-color: var(--text-white);
+            border-left-color: var(--text-white);
+            border-right-color: var(--border-dark);
+            border-bottom-color: var(--border-dark);
+            margin-top: 16px;
+        }
+
+        .pixel-input-group {
+            margin-bottom: 16px;
+        }
+
+        .pixel-label {
+            display: block;
+            font-size: 8px;
+            color: var(--text-white);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .pixel-input {
+            width: 100%;
+            padding: 12px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 10px;
+            background: var(--bg-darkest);
+            border: 2px solid var(--border-dark);
+            border-top-color: var(--border-dark);
+            border-left-color: var(--border-dark);
+            border-right-color: var(--text-white);
+            border-bottom-color: var(--text-white);
+            color: var(--text-white);
+            outline: none;
+        }
+
+        .pixel-input:focus {
+            border-color: var(--pixel-blue);
+            border-top-color: var(--pixel-blue);
+            border-left-color: var(--pixel-blue);
+            box-shadow: 0 0 8px rgba(0, 102, 255, 0.4);
+        }
+
+        .pixel-form-actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .pixel-button-secondary {
+            background: var(--bg-darker);
+            border-top-color: var(--border-light);
+            border-left-color: var(--border-light);
+        }
+
+        .pixel-button-secondary:hover {
+            background: var(--border-dark);
+        }
+
+        .auth-status {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: var(--bg-dark);
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            font-size: 8px;
+            color: var(--text-gray);
+            text-align: center;
+        }
+
+        .auth-status.authenticated {
+            color: var(--pixel-green);
+            border-color: var(--pixel-green);
+        }
+
+        .auth-status.error {
+            color: var(--pixel-red);
+            border-color: var(--pixel-red);
+        }
+    </style>
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="pixel-welcome-screen">
+        <div class="pixel-box pixel-title-box">
+            <h1 class="pixel-title">AWS QUEST</h1>
+            <p class="pixel-subtitle">PIXEL ADVENTURE</p>
+        </div>
+        <div class="pixel-menu">
+            <button class="pixel-button" id="start-adventure-btn">START GAME</button>
+            <button class="pixel-button" id="show-levels-btn">SELECT LEVEL</button>
+            <button class="pixel-button" id="show-login-btn">LOGIN</button>
+            <button class="pixel-button" id="show-register-btn">REGISTER</button>
+        </div>
+        <div class="auth-status" id="auth-status">
+            <span id="auth-message">Play as guest or login to save progress</span>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="pixel-auth-screen hidden">
+        <div class="pixel-box pixel-title-box">
+            <h2 class="pixel-title">LOGIN</h2>
+        </div>
+        <div class="pixel-form">
+            <div class="pixel-input-group">
+                <label class="pixel-label">USERNAME/EMAIL</label>
+                <input type="text" class="pixel-input" id="login-username" placeholder="Enter username or email">
+            </div>
+            <div class="pixel-input-group">
+                <label class="pixel-label">PASSWORD</label>
+                <input type="password" class="pixel-input" id="login-password" placeholder="Enter password">
+            </div>
+            <div class="pixel-form-actions">
+                <button class="pixel-button" id="login-submit-btn">LOGIN</button>
+                <button class="pixel-button pixel-button-secondary" id="back-from-login-btn">BACK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Screen -->
+    <div id="register-screen" class="pixel-auth-screen hidden">
+        <div class="pixel-box pixel-title-box">
+            <h2 class="pixel-title">REGISTER</h2>
+        </div>
+        <div class="pixel-form">
+            <div class="pixel-input-group">
+                <label class="pixel-label">USERNAME</label>
+                <input type="text" class="pixel-input" id="register-username" placeholder="Choose username">
+            </div>
+            <div class="pixel-input-group">
+                <label class="pixel-label">EMAIL</label>
+                <input type="email" class="pixel-input" id="register-email" placeholder="Enter email">
+            </div>
+            <div class="pixel-input-group">
+                <label class="pixel-label">PASSWORD</label>
+                <input type="password" class="pixel-input" id="register-password" placeholder="Choose password">
+            </div>
+            <div class="pixel-form-actions">
+                <button class="pixel-button" id="register-submit-btn">REGISTER</button>
+                <button class="pixel-button pixel-button-secondary" id="back-from-register-btn">BACK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Level Selection Screen -->
+    <div id="level-selection-screen" class="pixel-level-screen">
+        <div class="pixel-box pixel-title-box">
+            <h2 class="pixel-title">SELECT LEVEL</h2>
+        </div>
+        <div class="level-grid" id="level-grid">
+            <!-- Levels will be populated by JavaScript -->
+        </div>
+        <button class="pixel-button" id="back-to-menu-btn">BACK TO MENU</button>
+    </div>
+
+    <!-- Pixel Game Canvas -->
+    <canvas id="game-canvas" width="800" height="600"></canvas>
+
+    <!-- Pixel UI Overlay -->
+    <div class="ui-overlay">
+        <!-- Pixel HUD -->
+        <div class="pixel-hud" id="pixel-hud" style="display: none;">
+            <div class="hud-left">
+                <div class="pixel-character" id="pixel-character">🧙</div>
+                <div class="pixel-stats">
+                    <div class="pixel-stat-row">
+                        <span class="pixel-stat-label">HP</span>
+                        <div class="pixel-bar">
+                            <div class="pixel-bar-fill hp" id="hp-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="hp-text">100</span>
+                    </div>
+                    <div class="pixel-stat-row">
+                        <span class="pixel-stat-label">MP</span>
+                        <div class="pixel-bar">
+                            <div class="pixel-bar-fill mp" id="mp-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="mp-text">50</span>
+                    </div>
+                    <div class="pixel-stat-row">
+                        <span class="pixel-stat-label">EXP</span>
+                        <div class="pixel-bar">
+                            <div class="pixel-bar-fill exp" id="exp-bar" style="width: 0%"></div>
+                        </div>
+                        <span id="exp-text">0</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="pixel-level">LV <span id="character-level">1</span></div>
+                <div class="pixel-score"><span id="character-score">0</span> PTS</div>
+                <div class="pixel-progress">Q: <span id="level-progress">0/5</span></div>
+            </div>
+        </div>
+
+        <!-- Pixel Battle Screen -->
+        <div class="pixel-battle-screen" id="battle-screen">
+            <div class="pixel-question" id="question-text">
+                Welcome to AWS Quest! Select your first challenge.
+            </div>
+            <div class="pixel-options" id="battle-options">
+                <button class="pixel-option" data-option="0">Option A</button>
+                <button class="pixel-option" data-option="1">Option B</button>
+                <button class="pixel-option" data-option="2">Option C</button>
+                <button class="pixel-option" data-option="3">Option D</button>
+            </div>
+            <div class="pixel-battle-actions" style="margin-top: 16px; text-align: center;">
+                <button class="pixel-button" id="attack-btn" disabled>ATTACK</button>
+                <button class="pixel-button" id="next-battle-btn" style="display: none;">NEXT</button>
+                <button class="pixel-button" id="menu-btn">MENU</button>
+            </div>
+        </div>
+
+        <!-- Level Indicator -->
+        <div class="pixel-level-indicator" id="level-indicator" style="display: none;">
+            LEVEL: <span id="current-level-display">1</span> - <span id="current-level-name">AWS Basics</span>
+        </div>
+
+        <!-- Special Abilities Panel -->
+        <div class="abilities-panel" id="abilities-panel">
+            <div style="font-size: 8px; color: var(--pixel-yellow); margin-bottom: 8px;">SPECIAL ABILITIES</div>
+            <button class="ability-button" id="fireball-btn" onclick="useAbility('fireball')">
+                🔥 FIREBALL <span class="ability-cost">20 MP</span>
+            </button>
+            <button class="ability-button" id="heal-btn" onclick="useAbility('heal')">
+                💚 HEAL <span class="ability-cost">15 MP</span>
+            </button>
+            <button class="ability-button" id="shield-btn" onclick="useAbility('shield')">
+                🛡️ SHIELD <span class="ability-cost">25 MP</span>
+            </button>
+        </div>
+
+        <!-- Combo Display -->
+        <div class="combo-display" id="combo-display">
+            COMBO: <span class="combo-number" id="combo-number">0</span>
+        </div>
+
+        <!-- Timer Display -->
+        <div class="timer-display" id="timer-display">
+            TIME: <span id="timer-value">30</span>s
+        </div>
+
+        <!-- Battle Type Indicator -->
+        <div class="battle-type-indicator" id="battle-type-indicator">
+            <span id="battle-type-text">NORMAL BATTLE</span>
+        </div>
+    </div>
+        <!-- Game HUD -->
+        <div class="game-hud">
+            <div class="hud-left">
+                <div class="character-avatar" id="character-avatar">🧙‍♂️</div>
+                <div class="character-stats">
+                    <div class="stat-bar">
+                        <span class="stat-label">Health</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill hp-fill" id="hp-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="hp-text">100/100</span>
+                    </div>
+                    <div class="stat-bar">
+                        <span class="stat-label">Mana</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill mp-fill" id="mp-bar" style="width: 100%"></div>
+                        </div>
+                        <span id="mp-text">50/50</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hud-right">
+                <div class="level-display">Level <span id="character-level">1</span></div>
+                <div class="score-display"><span id="character-score">0</span> XP</div>
+            </div>
+        </div>
+
+        <!-- Character Stats Panel -->
+        <div class="stats-panel" id="stats-panel">
+            <div class="character-portrait">🧙‍♂️</div>
+            <div class="character-name" id="character-name">Cloud Architect</div>
+            <div class="stat-row">
+                <span class="stat-name">Level</span>
+                <span class="stat-value" id="stat-level">1</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Experience</span>
+                <span class="stat-value" id="stat-exp">0 / 1000</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Battles Won</span>
+                <span class="stat-value" id="stat-wins">0</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Accuracy</span>
+                <span class="stat-value" id="stat-accuracy">0%</span>
+            </div>
+            <div class="stat-row">
+                <span class="stat-name">Win Streak</span>
+                <span class="stat-value" id="stat-streak">0</span>
+            </div>
+        </div>
+
+        <!-- Inventory Panel -->
+        <div class="inventory-panel" id="inventory-panel">
+            <div class="panel-title">🎒 Inventory</div>
+            <div class="inventory-grid" id="inventory-grid">
+                <!-- Inventory slots generated by JavaScript -->
+            </div>
+            <div style="text-align: center; color: var(--text-muted); font-size: 0.875rem;">
+                Collect AWS artifacts and power-ups during battles!
+            </div>
+        </div>
+
+        <!-- Battle Interface -->
+        <div class="battle-interface" id="battle-interface">
+            <div class="question-display">
+                <div class="question-meta">
+                    <span id="question-category">Loading...</span>
+                    <div class="difficulty-badge" id="question-difficulty">Medium</div>
+                </div>
+                <div class="question-text" id="question-text">
+                    Preparing your next cloud challenge...
+                </div>
+            </div>
+            
+            <div class="battle-options" id="battle-options">
+                <!-- Options populated by JavaScript -->
+            </div>
+            
+            <div class="battle-actions">
+                <button class="rpg-button" id="attack-btn" disabled>⚔️ Attack</button>
+                <button class="rpg-button btn-secondary" id="next-battle-btn" style="display: none;">➡️ Next Battle</button>
+                <button class="rpg-button btn-secondary" id="inventory-btn" onclick="toggleInventory()">🎒 Inventory</button>
+                <button class="rpg-button btn-secondary" id="stats-btn" onclick="toggleStats()">📊 Stats</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced Pixel Art Game State with Save System
+        let gameState = {
+            canvas: null,
+            ctx: null,
+            currentLevel: 1,
+            currentStage: 'welcome', // welcome, battle, victory, defeat
+            animationFrame: null,
+            currentQuestion: null,
+            selectedAnswer: null,
+            
+            // Authentication & Save System
+            isAuthenticated: false,
+            userToken: localStorage.getItem('userToken'),
+            autoSaveInterval: null,
+            lastSaveTime: null,
+            saveInProgress: false,
+            pendingSave: false,
+            player: {
+                name: 'AWS Architect',
+                level: 1,
+                hp: 100,
+                maxHp: 100,
+                mp: 50,
+                maxMp: 50,
+                exp: 0,
+                expToNext: 100,
+                score: 0,
+                wins: 0,
+                streak: 0,
+                accuracy: 0,
+                totalQuestions: 0,
+                correctAnswers: 0,
+                x: 100,
+                y: 200,
+                sprite: 'mage',
+                animationFrame: 0,
+                direction: 'right',
+                gamesPlayed: 0,
+                levelsCompleted: [],
+                achievements: [],
+                settings: {
+                    sound: true,
+                    music: true,
+                    difficulty: 'normal',
+                    autoSave: true
+                }
+            },
+            enemy: {
+                name: 'AWS Bug',
+                hp: 50,
+                maxHp: 50,
+                x: 600,
+                y: 200,
+                sprite: 'monster',
+                animationFrame: 0,
+                isAlive: true
+            },
+            effects: [],
+            background: 'forest',
+            isInBattle: false,
+            battleType: 'normal', // normal, boss, speed, endurance
+            timeLimit: null,
+            combo: 0,
+            maxCombo: 0,
+            specialAbilities: {
+                fireball: { cooldown: 0, cost: 20, unlocked: true, level: 1 },
+                heal: { cooldown: 0, cost: 15, unlocked: true, level: 1 },
+                shield: { cooldown: 0, cost: 25, active: false, unlocked: false, level: 0 },
+                lightning: { cooldown: 0, cost: 35, unlocked: false, level: 0 },
+                blessing: { cooldown: 0, cost: 40, unlocked: false, level: 0 }
+            },
+            inventory: [],
+            dailyChallenges: [],
+            notifications: [],
+            
+            // Session tracking
+            sessionStartTime: Date.now(),
+            lastActivityTime: Date.now(),
+            sessionStats: {
+                questionsAnswered: 0,
+                correctAnswers: 0,
+                timeSpent: 0,
+                levelsAttempted: [],
+                achievementsEarned: []
+            },
+            
+            // Level progress tracking
+            currentLevelProgress: {
+                questionsAnswered: 0,
+                questionsRequired: 5
+            }
+        };
+
+        // Pixel Art Sprites (8x8 pixel characters using ASCII/Unicode)
+        const SPRITES = {
+            mage: {
+                idle: ['🧙‍♂️', '🧙'],
+                attack: ['⚡🧙‍♂️', '✨🧙'],
+                hurt: ['😵🧙‍♂️', '💥🧙']
+            },
+            monster: {
+                idle: ['👾', '🤖'],
+                attack: ['💀👾', '🔥🤖'], 
+                hurt: ['💥👾', '⚡🤖']
+            },
+            effects: {
+                hit: ['💥', '⚡', '✨', '💫'],
+                heal: ['💚', '🌟', '✨'],
+                magic: ['🔮', '✨', '🌟', '💫']
+            }
+        };
+
+        // Level Data
+        const LEVELS = [
+            // Easy Levels (1-3)
+            {
+                id: 1,
+                name: 'AWS Basics',
+                background: 'forest',
+                enemies: ['bug', 'error'],
+                questionDifficulty: 'easy',
+                category: 'Compute',
+                description: 'Learn the fundamentals of AWS services',
+                requiredQuestions: 5
+            },
+            {
+                id: 2,
+                name: 'Storage Fundamentals',
+                background: 'forest',
+                enemies: ['data-goblin', 'storage-bug'],
+                questionDifficulty: 'easy',
+                category: 'Storage',
+                description: 'Master S3, EBS, and storage basics',
+                requiredQuestions: 5
+            },
+            {
+                id: 3,
+                name: 'Networking Basics',
+                background: 'forest',
+                enemies: ['network-sprite', 'vpc-bug'],
+                questionDifficulty: 'easy',
+                category: 'Networking',
+                description: 'Understand VPC and networking fundamentals',
+                requiredQuestions: 5
+            },
+            
+            // Medium Levels (4-7)
+            {
+                id: 4,
+                name: 'EC2 Mastery',
+                background: 'cave',
+                enemies: ['instance-guardian', 'auto-scaling-beast'],
+                questionDifficulty: 'medium',
+                category: 'Compute',
+                description: 'Advanced EC2, Auto Scaling, and Load Balancing',
+                requiredQuestions: 8
+            },
+            {
+                id: 5,
+                name: 'Database Solutions',
+                background: 'cave',
+                enemies: ['rds-dragon', 'dynamo-demon'],
+                questionDifficulty: 'medium',
+                category: 'Database',
+                description: 'Master RDS, DynamoDB, and database services',
+                requiredQuestions: 8
+            },
+            {
+                id: 6,
+                name: 'Security & IAM',
+                background: 'cave',
+                enemies: ['security-guardian', 'iam-enforcer'],
+                questionDifficulty: 'medium',
+                category: 'Security',
+                description: 'Advanced security, encryption, and access control',
+                requiredQuestions: 8
+            },
+            {
+                id: 7,
+                name: 'Serverless Architecture',
+                background: 'cave',
+                enemies: ['lambda-phantom', 'api-gateway-beast'],
+                questionDifficulty: 'medium',
+                category: 'Serverless',
+                description: 'Lambda, API Gateway, and serverless patterns',
+                requiredQuestions: 8
+            },
+            
+            // Hard Levels (8-12)
+            {
+                id: 8,
+                name: 'High Availability',
+                background: 'castle',
+                enemies: ['disaster-lord', 'failover-titan'],
+                questionDifficulty: 'hard',
+                category: 'Disaster Recovery',
+                description: 'Advanced resilience and disaster recovery',
+                requiredQuestions: 10
+            },
+            {
+                id: 9,
+                name: 'Performance Optimization',
+                background: 'castle',
+                enemies: ['cache-demon', 'latency-dragon'],
+                questionDifficulty: 'hard',
+                category: 'Performance',
+                description: 'Caching, CDN, and performance tuning',
+                requiredQuestions: 10
+            },
+            {
+                id: 10,
+                name: 'Cost Optimization',
+                background: 'castle',
+                enemies: ['budget-beast', 'cost-optimizer'],
+                questionDifficulty: 'hard',
+                category: 'Cost Optimization',
+                description: 'Advanced cost management and optimization',
+                requiredQuestions: 10
+            },
+            {
+                id: 11,
+                name: 'Analytics & ML',
+                background: 'castle',
+                enemies: ['data-wizard', 'ml-overlord'],
+                questionDifficulty: 'hard',
+                category: 'Analytics',
+                description: 'Big Data, Analytics, and Machine Learning',
+                requiredQuestions: 10
+            },
+            {
+                id: 12,
+                name: 'Solutions Architect Master',
+                background: 'castle',
+                enemies: ['architect-emperor', 'final-boss'],
+                questionDifficulty: 'hard',
+                category: 'Mixed',
+                description: 'Ultimate challenge covering all domains',
+                requiredQuestions: 15
+            }
+        ];
+
+        // Initialize Pixel Art Game
+        function initializeGame() {
+            console.log('🎮 Initializing AWS Quest Pixel Adventure...');
+            
+            // Get canvas and context
+            gameState.canvas = document.getElementById('game-canvas');
+            gameState.ctx = gameState.canvas.getContext('2d');
+            
+            // Disable image smoothing for pixel art
+            gameState.ctx.imageSmoothingEnabled = false;
+            gameState.ctx.webkitImageSmoothingEnabled = false;
+            gameState.ctx.mozImageSmoothingEnabled = false;
+            gameState.ctx.msImageSmoothingEnabled = false;
+            
+            // Start game loop
+            gameLoop();
+            
+            // Initialize authentication and save system
+            initializeAuth();
+            
+            console.log('✅ Pixel Adventure initialized successfully!');
+        }
+
+        // Authentication & Save System Functions
+        async function initializeAuth() {
+            // Check for existing token
+            if (gameState.userToken) {
+                try {
+                    const response = await fetch('/api/game/load-progress', {
+                        headers: {
+                            'Authorization': `Bearer ${gameState.userToken}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            loadGameProgress(data.progress);
+                            gameState.isAuthenticated = true;
+                            startAutoSave();
+                            addNotification('Welcome back! Progress loaded.', 'success');
+                        }
+                    } else {
+                        localStorage.removeItem('userToken');
+                        gameState.userToken = null;
+                    }
+                } catch (error) {
+                    console.error('Auth initialization error:', error);
+                }
+            }
+        }
+
+        function loadGameProgress(progress) {
+            if (!progress) return;
+            
+            // Load player data
+            gameState.player.level = progress.level || 1;
+            gameState.player.exp = progress.experience || 0;
+            gameState.player.score = progress.totalScore || 0;
+            gameState.player.gamesPlayed = progress.gamesPlayed || 0;
+            gameState.player.totalQuestions = progress.totalQuestions || 0;
+            gameState.player.correctAnswers = progress.correctAnswers || 0;
+            gameState.player.levelsCompleted = progress.levelsCompleted || [];
+            gameState.player.achievements = progress.achievements || [];
+            gameState.player.settings = { ...gameState.player.settings, ...progress.settings };
+            gameState.maxCombo = progress.maxCombo || 0;
+            gameState.specialAbilities = { ...gameState.specialAbilities, ...progress.specialAbilities };
+            gameState.inventory = progress.inventory || [];
+            
+            // Update accuracy
+            if (gameState.player.totalQuestions > 0) {
+                gameState.player.accuracy = Math.round((gameState.player.correctAnswers / gameState.player.totalQuestions) * 100);
+            }
+            
+            gameState.lastSaveTime = progress.lastSave;
+            updateUI();
+        }
+
+        async function saveGameProgress() {
+            if (!gameState.isAuthenticated || gameState.saveInProgress) {
+                gameState.pendingSave = true;
+                return;
+            }
+            
+            gameState.saveInProgress = true;
+            
+            try {
+                const progressData = {
+                    level: gameState.player.level,
+                    experience: gameState.player.exp,
+                    totalScore: gameState.player.score,
+                    maxCombo: gameState.maxCombo,
+                    gamesPlayed: gameState.player.gamesPlayed,
+                    totalQuestions: gameState.player.totalQuestions,
+                    correctAnswers: gameState.player.correctAnswers,
+                    levelsCompleted: gameState.player.levelsCompleted,
+                    achievements: gameState.player.achievements,
+                    specialAbilities: gameState.specialAbilities,
+                    inventory: gameState.inventory,
+                    settings: gameState.player.settings
+                };
+                
+                const response = await fetch('/api/game/save-progress', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${gameState.userToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(progressData)
+                });
+                
+                if (response.ok) {
+                    gameState.lastSaveTime = Date.now();
+                    addNotification('Game saved!', 'success');
+                } else {
+                    throw new Error('Save failed');
+                }
+            } catch (error) {
+                console.error('Save error:', error);
+                addNotification('Save failed!', 'error');
+                gameState.pendingSave = true;
+            }
+            
+            gameState.saveInProgress = false;
+            
+            // If there's a pending save, execute it
+            if (gameState.pendingSave) {
+                gameState.pendingSave = false;
+                setTimeout(() => saveGameProgress(), 1000);
+            }
+        }
+
+        function startAutoSave() {
+            if (gameState.autoSaveInterval) {
+                clearInterval(gameState.autoSaveInterval);
+            }
+            
+            if (gameState.player.settings.autoSave) {
+                gameState.autoSaveInterval = setInterval(() => {
+                    if (gameState.isAuthenticated) {
+                        saveGameProgress();
+                    }
+                }, 30000); // Auto-save every 30 seconds
+            }
+        }
+
+        function addNotification(message, type = 'info') {
+            const notification = {
+                id: Date.now(),
+                message,
+                type,
+                timestamp: Date.now()
+            };
+            
+            gameState.notifications.push(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                gameState.notifications = gameState.notifications.filter(n => n.id !== notification.id);
+            }, 3000);
+            
+            // Display notification (simple console log for now)
+            console.log(`🔔 ${type.toUpperCase()}: ${message}`);
+        }
+
+        // Main Game Loop
+        function gameLoop() {
+            // Clear canvas
+            gameState.ctx.fillStyle = '#0f0f23';
+            gameState.ctx.fillRect(0, 0, gameState.canvas.width, gameState.canvas.height);
+            
+            // Draw background
+            drawBackground();
+            
+            // Update and draw game objects based on current stage
+            switch(gameState.currentStage) {
+                case 'welcome':
+                    // Welcome screen is handled by HTML
+                    break;
+                case 'battle':
+                    updateBattle();
+                    drawBattle();
+                    break;
+                case 'victory':
+                    drawVictory();
+                    break;
+                case 'defeat':
+                    drawDefeat();
+                    break;
+            }
+            
+            // Update effects
+            updateEffects();
+            drawEffects();
+            
+            // Continue loop
+            gameState.animationFrame = requestAnimationFrame(gameLoop);
+        }
+
+        // Draw Pixel Art Background
+        function drawBackground() {
+            const ctx = gameState.ctx;
+            const level = LEVELS[gameState.currentLevel - 1];
+            
+            if (!level) return;
+            
+            // Draw background pattern based on level
+            switch(level.background) {
+                case 'forest':
+                    // Green forest background with trees
+                    ctx.fillStyle = '#228B22';
+                    ctx.fillRect(0, 400, 800, 200);
+                    
+                    // Draw trees
+                    for (let i = 0; i < 5; i++) {
+                        const x = i * 160 + 50;
+                        drawTree(x, 350);
+                    }
+                    break;
+                    
+                case 'cave':
+                    // Dark cave background
+                    ctx.fillStyle = '#2F2F2F';
+                    ctx.fillRect(0, 400, 800, 200);
+                    
+                    // Draw cave walls
+                    ctx.fillStyle = '#1C1C1C';
+                    ctx.fillRect(0, 0, 50, 600);
+                    ctx.fillRect(750, 0, 50, 600);
+                    break;
+                    
+                case 'castle':
+                    // Castle background
+                    ctx.fillStyle = '#8B4513';
+                    ctx.fillRect(0, 400, 800, 200);
+                    
+                    // Draw castle walls
+                    ctx.fillStyle = '#696969';
+                    for (let i = 0; i < 3; i++) {
+                        const x = i * 250 + 100;
+                        drawCastleWall(x, 300);
+                    }
+                    break;
+            }
+            
+            // Draw clouds
+            ctx.fillStyle = '#87CEEB';
+            for (let i = 0; i < 4; i++) {
+                const x = i * 200 + 50;
+                const y = 50 + Math.sin(Date.now() * 0.001 + i) * 20;
+                drawCloud(x, y);
+            }
+        }
+
+        // Draw Tree (Pixel Art)
+        function drawTree(x, y) {
+            const ctx = gameState.ctx;
+            
+            // Trunk
+            ctx.fillStyle = '#8B4513';
+            ctx.fillRect(x + 16, y + 32, 16, 48);
+            
+            // Leaves
+            ctx.fillStyle = '#228B22';
+            ctx.fillRect(x, y, 48, 48);
+            
+            // Tree top
+            ctx.fillStyle = '#32CD32';
+            ctx.fillRect(x + 8, y - 8, 32, 24);
+        }
+
+        // Draw Cloud (Pixel Art)
+        function drawCloud(x, y) {
+            const ctx = gameState.ctx;
+            ctx.fillStyle = '#FFFFFF';
+            
+            // Cloud parts
+            ctx.fillRect(x, y + 8, 64, 16);
+            ctx.fillRect(x + 8, y, 48, 32);
+            ctx.fillRect(x + 16, y - 8, 32, 24);
+        }
+
+        // Draw Castle Wall
+        function drawCastleWall(x, y) {
+            const ctx = gameState.ctx;
+            
+            // Main wall
+            ctx.fillStyle = '#696969';
+            ctx.fillRect(x, y, 80, 100);
+            
+            // Battlements
+            ctx.fillRect(x, y - 16, 16, 16);
+            ctx.fillRect(x + 32, y - 16, 16, 16);
+            ctx.fillRect(x + 64, y - 16, 16, 16);
+        }
+
+        // Draw Battle Scene
+        function drawBattle() {
+            const ctx = gameState.ctx;
+            
+            // Draw player character
+            drawCharacter(gameState.player);
+            
+            // Draw enemy
+            if (gameState.enemy.isAlive) {
+                drawCharacter(gameState.enemy);
+            }
+            
+            // Draw health bars above characters
+            drawHealthBar(gameState.player.x, gameState.player.y - 40, 
+                         gameState.player.hp, gameState.player.maxHp, '#ff0044');
+            
+            if (gameState.enemy.isAlive) {
+                drawHealthBar(gameState.enemy.x, gameState.enemy.y - 40, 
+                             gameState.enemy.hp, gameState.enemy.maxHp, '#ff0044');
+            }
+        }
+
+        // Draw Pixel Art Character
+        function drawCharacter(character) {
+            const ctx = gameState.ctx;
+            
+            // Get current sprite based on animation frame
+            const spriteType = character.sprite;
+            const spriteSet = SPRITES[spriteType];
+            
+            if (!spriteSet) return;
+            
+            // Determine current animation state
+            let currentAnimation = 'idle';
+            
+            // Simple animated sprite selection
+            const frameIndex = Math.floor(Date.now() / 500) % spriteSet.idle.length;
+            const sprite = spriteSet[currentAnimation][frameIndex];
+            
+            // Draw sprite (using emoji as pixel art)
+            ctx.font = '48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(sprite, character.x, character.y);
+            
+            // Draw character shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.fillRect(character.x - 24, character.y + 20, 48, 8);
+        }
+
+        // Draw Health Bar
+        function drawHealthBar(x, y, currentHp, maxHp, color) {
+            const ctx = gameState.ctx;
+            const barWidth = 60;
+            const barHeight = 8;
+            
+            // Background
+            ctx.fillStyle = '#333333';
+            ctx.fillRect(x - barWidth/2, y, barWidth, barHeight);
+            
+            // Health fill
+            const healthPercent = currentHp / maxHp;
+            ctx.fillStyle = color;
+            ctx.fillRect(x - barWidth/2, y, barWidth * healthPercent, barHeight);
+            
+            // Border
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(x - barWidth/2, y, barWidth, barHeight);
+        }
+
+        // Update Battle Logic
+        function updateBattle() {
+            // Animate characters
+            gameState.player.animationFrame++;
+            gameState.enemy.animationFrame++;
+            
+            // Simple breathing animation
+            const breathe = Math.sin(Date.now() * 0.003) * 2;
+            gameState.player.y = 400 + breathe;
+            gameState.enemy.y = 400 - breathe;
+        }
+
+        // Draw Effects System
+        function drawEffects() {
+            const ctx = gameState.ctx;
+            
+            gameState.effects.forEach(effect => {
+                ctx.font = `${effect.size}px Arial`;
+                ctx.fillStyle = effect.color;
+                ctx.textAlign = 'center';
+                ctx.globalAlpha = effect.opacity;
+                ctx.fillText(effect.text, effect.x, effect.y);
+                ctx.globalAlpha = 1;
+            });
+        }
+
+        // Update Effects
+        function updateEffects() {
+            for (let i = gameState.effects.length - 1; i >= 0; i--) {
+                const effect = gameState.effects[i];
+                effect.y -= effect.speed;
+                effect.opacity -= 0.02;
+                effect.life--;
+                
+                if (effect.life <= 0 || effect.opacity <= 0) {
+                    gameState.effects.splice(i, 1);
+                }
+            }
+        }
+
+        // Add Effect
+        function addEffect(x, y, text, color = '#ffffff', size = 24) {
+            gameState.effects.push({
+                x: x,
+                y: y,
+                text: text,
+                color: color,
+                size: size,
+                opacity: 1,
+                speed: 2,
+                life: 60
+            });
+        }
+
+        // Draw Victory Screen
+        function drawVictory() {
+            const ctx = gameState.ctx;
+            
+            // Victory background
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.3)';
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // Victory text
+            ctx.font = '48px Press Start 2P';
+            ctx.fillStyle = '#00ff00';
+            ctx.textAlign = 'center';
+            ctx.fillText('VICTORY!', 400, 300);
+        }
+
+        // Draw Defeat Screen  
+        function drawDefeat() {
+            const ctx = gameState.ctx;
+            
+            // Defeat background
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+            ctx.fillRect(0, 0, 800, 600);
+            
+            // Defeat text
+            ctx.font = '48px Press Start 2P';
+            ctx.fillStyle = '#ff0000';
+            ctx.textAlign = 'center';
+            ctx.fillText('DEFEAT!', 400, 300);
+        }
+
+        // Game Control Functions
+        function startBattle() {
+            gameState.currentStage = 'battle';
+            gameState.isInBattle = true;
+            
+            // Hide welcome screen
+            document.getElementById('welcome-screen').classList.add('hidden');
+            
+            // Show game HUD and battle screen
+            document.getElementById('pixel-hud').style.display = 'block';
+            document.getElementById('battle-screen').classList.add('active');
+            document.getElementById('level-indicator').style.display = 'block';
+            document.getElementById('abilities-panel').classList.add('active');
+            
+            // Update level indicator
+            const currentLevel = LEVELS[gameState.currentLevel - 1];
+            document.getElementById('current-level-display').textContent = gameState.currentLevel;
+            document.getElementById('current-level-name').textContent = currentLevel.name;
+            
+            // Initialize battle type based on level
+            let battleType = 'normal';
+            if (gameState.currentLevel === 2) battleType = 'speed';
+            if (gameState.currentLevel === 3) battleType = 'boss';
+            
+            initializeBattleType(battleType);
+            
+            // Load first question
+            loadQuestion();
+            
+            console.log(`🎯 Battle started! Level ${gameState.currentLevel}: ${currentLevel.name} (${battleType.toUpperCase()})`);
+        }
+
+        async function loadQuestion() {
+            try {
+                const currentLevel = LEVELS[gameState.currentLevel - 1];
+                if (!currentLevel) return;
+                
+                // Build query parameters
+                const params = new URLSearchParams({
+                    difficulty: currentLevel.questionDifficulty
+                });
+                
+                // Add category filter if not mixed
+                if (currentLevel.category && currentLevel.category !== 'Mixed') {
+                    params.append('category', currentLevel.category);
+                }
+                
+                // Fetch question from server
+                const response = await fetch(`/api/game/question/session_${Date.now()}?${params}`, {
+                    headers: gameState.isAuthenticated ? {
+                        'Authorization': `Bearer ${gameState.userToken}`
+                    } : {}
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        gameState.currentQuestion = data.question;
+                        updateQuestionUI(data.question);
+                        return;
+                    }
+                }
+                
+                // Fallback to local questions
+                const questionData = getRandomAWSQuestion();
+                gameState.currentQuestion = questionData;
+                updateQuestionUI(questionData);
+                
+            } catch (error) {
+                console.error('Error loading question:', error);
+                // Fallback to local questions
+                const questionData = getRandomAWSQuestion();
+                gameState.currentQuestion = questionData;
+                updateQuestionUI(questionData);
+            }
+        }
+        
+        function updateQuestionUI(questionData) {
+            // Update UI
+            document.getElementById('question-text').textContent = questionData.question;
+            
+            const options = document.querySelectorAll('.pixel-option');
+            options.forEach((option, index) => {
+                option.textContent = `${String.fromCharCode(65 + index)}. ${questionData.options[index]}`;
+                option.classList.remove('selected', 'correct', 'incorrect');
+                option.disabled = false;
+            });
+            
+            // Reset attack button
+            document.getElementById('attack-btn').disabled = true;
+            gameState.selectedAnswer = null;
+        }
+
+        function selectOption(index) {
+            // Clear previous selections
+            document.querySelectorAll('.pixel-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select new option
+            document.querySelectorAll('.pixel-option')[index].classList.add('selected');
+            gameState.selectedAnswer = index;
+            document.getElementById('attack-btn').disabled = false;
+        }
+
+        function attack() {
+            if (gameState.selectedAnswer === null && gameState.selectedAnswer !== -1) return;
+            
+            const isCorrect = gameState.selectedAnswer === gameState.currentQuestion.correct;
+            
+            // Visual feedback
+            document.querySelectorAll('.pixel-option').forEach((btn, index) => {
+                if (index === gameState.currentQuestion.correct) {
+                    btn.classList.add('correct');
+                } else if (index === gameState.selectedAnswer && !isCorrect) {
+                    btn.classList.add('incorrect');
+                }
+                btn.disabled = true;
+            });
+            
+            // Update combo system
+            updateCombo(isCorrect);
+            
+            // Battle effects
+            if (isCorrect) {
+                performAttack();
+                gameState.player.correctAnswers++;
+                
+                // Calculate score with combo bonus
+                let scoreGain = 100;
+                if (gameState.combo >= 3) scoreGain += gameState.combo * 20;
+                
+                gameState.player.score += scoreGain;
+                gameState.player.streak++;
+                addEffect(gameState.enemy.x, gameState.enemy.y - 60, `+${scoreGain} XP`, '#ffcc00', 20);
+                
+                // Damage enemy
+                let damage = 20;
+                if (gameState.combo >= 10) damage += 10; // Combo damage bonus
+                
+                gameState.enemy.hp -= damage;
+                addEffect(gameState.enemy.x, gameState.enemy.y - 80, `-${damage}`, '#ff0044', 24);
+            } else {
+                // Apply damage with shield consideration
+                let damageToPlayer = 20;
+                if (gameState.specialAbilities.shield.active) {
+                    damageToPlayer = Math.floor(damageToPlayer / 2);
+                    addEffect(gameState.player.x, gameState.player.y, '🛡️', '#00ffcc', 24);
+                }
+                
+                gameState.player.hp -= damageToPlayer;
+                gameState.player.streak = 0;
+                addEffect(gameState.player.x, gameState.player.y - 60, `-${damageToPlayer} HP`, '#ff0044', 20);
+            }
+            
+            gameState.player.totalQuestions++;
+            gameState.currentLevelProgress.questionsAnswered++;
+            gameState.player.accuracy = Math.round((gameState.player.correctAnswers / gameState.player.totalQuestions) * 100);
+            
+            // Check for level up
+            gameState.player.exp += isCorrect ? 25 : 5;
+            if (gameState.player.exp >= gameState.player.expToNext) {
+                levelUp();
+                triggerSave(); // Save on level up
+            }
+            
+            // Update cooldowns and abilities
+            updateCooldowns();
+            updateAbilityButtons();
+            updateUI();
+            
+            // Save progress every 5 questions
+            if (gameState.player.totalQuestions % 5 === 0) {
+                triggerSave();
+            }
+            
+            // Reset timer for speed battles
+            if (gameState.battleType === 'speed') {
+                gameState.timeLimit = 30;
+                document.getElementById('timer-display').classList.remove('timer-warning');
+            }
+            
+            // Check battle end conditions
+            if (gameState.enemy.hp <= 0) {
+                gameState.enemy.isAlive = false;
+                gameState.currentStage = 'victory';
+                setTimeout(() => {
+                    nextLevel();
+                }, 2000);
+            } else if (gameState.player.hp <= 0) {
+                gameState.currentStage = 'defeat';
+                setTimeout(() => {
+                    restartGame();
+                }, 2000);
+            } else {
+                // Auto-advance to next question after showing answer
+                document.getElementById('attack-btn').style.display = 'none';
+                document.getElementById('next-battle-btn').style.display = 'inline-block';
+                
+                // Show loading indicator and automatically load next question
+                setTimeout(() => {
+                    addEffect(400, 300, 'Loading Next Question...', '#00ffcc', 16);
+                }, 1000);
+                
+                setTimeout(() => {
+                    nextBattle();
+                }, 2000);
+            }
+        }
+
+        function performAttack() {
+            // Add visual attack effect
+            addEffect(gameState.enemy.x, gameState.enemy.y, '💥', '#ffcc00', 32);
+            
+            // Screen shake effect (simple)
+            const canvas = gameState.canvas;
+            canvas.style.transform = 'translate(2px, 2px)';
+            setTimeout(() => {
+                canvas.style.transform = 'translate(-2px, -2px)';
+                setTimeout(() => {
+                    canvas.style.transform = 'translate(0px, 0px)';
+                }, 50);
+            }, 50);
+        }
+
+        function levelUp() {
+            gameState.player.level++;
+            gameState.player.exp = 0;
+            gameState.player.expToNext += 50;
+            gameState.player.maxHp += 20;
+            gameState.player.hp = gameState.player.maxHp;
+            gameState.player.maxMp += 10;
+            gameState.player.mp = gameState.player.maxMp;
+            
+            addEffect(gameState.player.x, gameState.player.y - 80, 'LEVEL UP!', '#00ff00', 28);
+        }
+
+        function nextBattle() {
+            gameState.player.wins++;
+            
+            // Reset UI elements
+            document.getElementById('attack-btn').style.display = 'inline-block';
+            document.getElementById('next-battle-btn').style.display = 'none';
+            document.getElementById('attack-btn').disabled = true;
+            
+            // Clear previous question selections and styles
+            document.querySelectorAll('.pixel-option').forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+                option.disabled = false;
+            });
+            
+            // Reset game state
+            gameState.selectedAnswer = null;
+            
+            // Load new question
+            loadQuestion();
+        }
+
+        function nextLevel() {
+            gameState.currentLevel++;
+            
+            // Reset level progress for new level
+            gameState.currentLevelProgress.questionsAnswered = 0;
+            
+            // Add level to completed levels
+            if (!gameState.player.levelsCompleted.includes(gameState.currentLevel - 1)) {
+                gameState.player.levelsCompleted.push(gameState.currentLevel - 1);
+            }
+            
+            if (gameState.currentLevel > LEVELS.length) {
+                // Game completed!
+                triggerSave(); // Save final progress
+                alert('🎉 Congratulations! You have mastered AWS Quest!');
+                restartGame();
+                return;
+            }
+            
+            // Reset for next level
+            gameState.enemy.hp = 50 + (gameState.currentLevel * 25);
+            gameState.enemy.maxHp = gameState.enemy.hp;
+            gameState.enemy.isAlive = true;
+            gameState.currentStage = 'battle';
+            
+            addEffect(400, 200, `LEVEL ${gameState.currentLevel}`, '#00ffcc', 36);
+            
+            // Save on level completion
+            triggerSave();
+            
+            loadQuestion();
+        }
+
+        function restartGame() {
+            // Reset game state
+            gameState.currentLevel = 1;
+            gameState.currentStage = 'welcome';
+            gameState.player.level = 1;
+            gameState.player.hp = 100;
+            gameState.player.maxHp = 100;
+            gameState.player.mp = 50;
+            gameState.player.maxMp = 50;
+            gameState.player.exp = 0;
+            gameState.player.expToNext = 100;
+            gameState.player.score = 0;
+            gameState.player.wins = 0;
+            gameState.player.streak = 0;
+            gameState.player.totalQuestions = 0;
+            gameState.player.correctAnswers = 0;
+            gameState.player.accuracy = 0;
+            
+            gameState.enemy.hp = 50;
+            gameState.enemy.maxHp = 50;
+            gameState.enemy.isAlive = true;
+            
+            // Show welcome screen
+            document.getElementById('welcome-screen').classList.remove('hidden');
+            document.getElementById('pixel-hud').style.display = 'none';
+            document.getElementById('battle-screen').classList.remove('active');
+        }
+
+        function updateUI() {
+            // Update HUD
+            const hpPercent = (gameState.player.hp / gameState.player.maxHp) * 100;
+            const mpPercent = (gameState.player.mp / gameState.player.maxMp) * 100;
+            const expPercent = (gameState.player.exp / gameState.player.expToNext) * 100;
+            
+            document.getElementById('hp-bar').style.width = hpPercent + '%';
+            document.getElementById('hp-text').textContent = gameState.player.hp;
+            document.getElementById('mp-bar').style.width = mpPercent + '%';
+            document.getElementById('mp-text').textContent = gameState.player.mp;
+            document.getElementById('exp-bar').style.width = expPercent + '%';
+            document.getElementById('exp-text').textContent = gameState.player.exp;
+            document.getElementById('character-level').textContent = gameState.player.level;
+            document.getElementById('character-score').textContent = gameState.player.score;
+            
+            // Update level progress
+            const currentLevel = LEVELS[gameState.currentLevel - 1];
+            if (currentLevel) {
+                gameState.currentLevelProgress.questionsRequired = currentLevel.requiredQuestions || 5;
+                document.getElementById('level-progress').textContent = 
+                    `${gameState.currentLevelProgress.questionsAnswered}/${gameState.currentLevelProgress.questionsRequired}`;
+            }
+        }
+
+        // Enhanced AWS Questions Database by Level
+        const QUESTIONS_BY_LEVEL = {
+            1: [ // AWS Basics
+                {
+                    question: "What AWS service provides scalable compute capacity in the cloud?",
+                    options: ["Amazon S3", "Amazon EC2", "Amazon RDS", "Amazon VPC"],
+                    correct: 1,
+                    explanation: "Amazon EC2 provides resizable compute capacity in the cloud."
+                },
+                {
+                    question: "Which AWS service is used for object storage?",
+                    options: ["Amazon S3", "Amazon EBS", "Amazon EFS", "Amazon Glacier"],
+                    correct: 0,
+                    explanation: "Amazon S3 is a web service for storing and retrieving any amount of data."
+                },
+                {
+                    question: "What does AWS Lambda allow you to do?",
+                    options: ["Store files", "Run code without provisioning servers", "Create databases", "Monitor applications"],
+                    correct: 1,
+                    explanation: "AWS Lambda runs your code without provisioning or managing servers."
+                },
+                {
+                    question: "Which service provides DNS services for AWS?",
+                    options: ["Amazon CloudFront", "Amazon Route 53", "Amazon VPC", "Amazon API Gateway"],
+                    correct: 1,
+                    explanation: "Amazon Route 53 is a highly available and scalable DNS web service."
+                }
+            ],
+            2: [ // EC2 Mastery
+                {
+                    question: "Which instance type is best for CPU-intensive applications?",
+                    options: ["t3.micro", "c5.large", "m5.large", "r5.large"],
+                    correct: 1,
+                    explanation: "C5 instances are optimized for compute-intensive applications."
+                },
+                {
+                    question: "What is the maximum number of security groups per EC2 instance?",
+                    options: ["3", "5", "10", "Unlimited"],
+                    correct: 1,
+                    explanation: "You can assign up to 5 security groups to an EC2 instance."
+                },
+                {
+                    question: "Which storage type provides the highest IOPS for EC2?",
+                    options: ["gp2", "gp3", "io1", "st1"],
+                    correct: 2,
+                    explanation: "io1 volumes can deliver up to 64,000 IOPS per volume."
+                },
+                {
+                    question: "What happens to instance store data when an EC2 instance is stopped?",
+                    options: ["Data is preserved", "Data is lost", "Data is moved to S3", "Data is encrypted"],
+                    correct: 1,
+                    explanation: "Instance store data is ephemeral and lost when the instance is stopped."
+                }
+            ],
+            3: [ // Storage Solutions
+                {
+                    question: "What is the maximum size of a single S3 object?",
+                    options: ["5 TB", "5 GB", "100 GB", "1 TB"],
+                    correct: 0,
+                    explanation: "A single S3 object can be up to 5 TB in size."
+                },
+                {
+                    question: "Which S3 storage class is designed for long-term archival?",
+                    options: ["Standard", "Standard-IA", "Glacier", "Reduced Redundancy"],
+                    correct: 2,
+                    explanation: "Amazon S3 Glacier is designed for long-term archival and backup."
+                },
+                {
+                    question: "What is the minimum storage duration for S3 Glacier?",
+                    options: ["1 day", "30 days", "90 days", "180 days"],
+                    correct: 2,
+                    explanation: "S3 Glacier has a minimum storage duration of 90 days."
+                },
+                {
+                    question: "Which EBS volume type is best for throughput-intensive applications?",
+                    options: ["gp2", "gp3", "io1", "st1"],
+                    correct: 3,
+                    explanation: "st1 (Throughput Optimized HDD) is designed for throughput-intensive workloads."
+                }
+            ]
+        };
+
+        function getRandomAWSQuestion() {
+            const levelQuestions = QUESTIONS_BY_LEVEL[gameState.currentLevel] || QUESTIONS_BY_LEVEL[1];
+            return levelQuestions[Math.floor(Math.random() * levelQuestions.length)];
+        }
+
+        // Level Management Functions
+        function showLevelSelection() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('level-selection-screen').classList.add('active');
+            populateLevelGrid();
+        }
+
+        function populateLevelGrid() {
+            const levelGrid = document.getElementById('level-grid');
+            levelGrid.innerHTML = '';
+
+            LEVELS.forEach((level, index) => {
+                const levelCard = document.createElement('div');
+                levelCard.className = 'level-card';
+                
+                // Check if level is unlocked
+                const isUnlocked = index === 0 || gameState.player.level >= index;
+                if (!isUnlocked) {
+                    levelCard.classList.add('locked');
+                }
+
+                levelCard.innerHTML = `
+                    <div class="level-title">LEVEL ${level.id}: ${level.name}</div>
+                    <div class="level-description">${level.description}</div>
+                    <div class="level-stats">
+                        Difficulty: ${level.questionDifficulty.toUpperCase()}<br>
+                        Enemies: ${level.enemies.length}
+                    </div>
+                `;
+
+                if (isUnlocked) {
+                    levelCard.addEventListener('click', () => selectLevel(level.id));
+                }
+
+                levelGrid.appendChild(levelCard);
+            });
+        }
+
+        function selectLevel(levelId) {
+            gameState.currentLevel = levelId;
+            const level = LEVELS[levelId - 1];
+            
+            // Reset level progress
+            gameState.currentLevelProgress.questionsAnswered = 0;
+            gameState.currentLevelProgress.questionsRequired = level.requiredQuestions || 5;
+            
+            // Update background and enemy based on level
+            gameState.background = level.background;
+            gameState.enemy.name = `Level ${levelId} Boss`;
+            gameState.enemy.hp = 50 + (levelId * 25);
+            gameState.enemy.maxHp = gameState.enemy.hp;
+            
+            // Hide level selection and start battle
+            document.getElementById('level-selection-screen').classList.remove('active');
+            startBattle();
+        }
+
+        function backToMenu() {
+            document.getElementById('level-selection-screen').classList.remove('active');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+        }
+
+        // Advanced Battle System
+        function initializeBattleType(type = 'normal') {
+            gameState.battleType = type;
+            
+            switch(type) {
+                case 'speed':
+                    gameState.timeLimit = 30; // 30 seconds per question
+                    document.getElementById('timer-display').classList.add('active');
+                    startTimer();
+                    break;
+                case 'boss':
+                    gameState.enemy.hp *= 2; // Double HP for boss
+                    gameState.enemy.maxHp = gameState.enemy.hp;
+                    break;
+                case 'endurance':
+                    // Continuous questions until defeat
+                    break;
+            }
+            
+            // Update battle type indicator
+            const indicator = document.getElementById('battle-type-indicator');
+            const text = document.getElementById('battle-type-text');
+            indicator.classList.add('active');
+            indicator.className = `battle-type-indicator active battle-type-${type}`;
+            text.textContent = `${type.toUpperCase()} BATTLE`;
+        }
+
+        function startTimer() {
+            if (gameState.timeLimit === null) return;
+            
+            const timerElement = document.getElementById('timer-value');
+            const timerDisplay = document.getElementById('timer-display');
+            
+            const countdown = setInterval(() => {
+                gameState.timeLimit--;
+                timerElement.textContent = gameState.timeLimit;
+                
+                if (gameState.timeLimit <= 10) {
+                    timerDisplay.classList.add('timer-warning');
+                }
+                
+                if (gameState.timeLimit <= 0) {
+                    clearInterval(countdown);
+                    // Auto-submit wrong answer on timeout
+                    gameState.selectedAnswer = -1; // Invalid answer
+                    attack();
+                }
+            }, 1000);
+        }
+
+        // Special Abilities System
+        function useAbility(abilityName) {
+            const ability = gameState.specialAbilities[abilityName];
+            
+            if (ability.cooldown > 0 || gameState.player.mp < ability.cost) {
+                addEffect(gameState.player.x, gameState.player.y - 40, 'NOT READY', '#ff0044', 16);
+                return;
+            }
+            
+            // Consume MP
+            gameState.player.mp -= ability.cost;
+            ability.cooldown = 3; // 3 question cooldown
+            
+            switch(abilityName) {
+                case 'fireball':
+                    // Deal extra damage to enemy
+                    gameState.enemy.hp -= 30;
+                    addEffect(gameState.enemy.x, gameState.enemy.y, '🔥', '#ff8800', 32);
+                    addEffect(gameState.enemy.x, gameState.enemy.y - 60, '-30', '#ff0044', 24);
+                    break;
+                    
+                case 'heal':
+                    // Restore HP
+                    const healAmount = 40;
+                    gameState.player.hp = Math.min(gameState.player.maxHp, gameState.player.hp + healAmount);
+                    addEffect(gameState.player.x, gameState.player.y, '💚', '#00ff00', 32);
+                    addEffect(gameState.player.x, gameState.player.y - 60, `+${healAmount}`, '#00ff00', 20);
+                    break;
+                    
+                case 'shield':
+                    // Activate shield for next few attacks
+                    ability.active = true;
+                    gameState.player.shieldTurns = 3;
+                    addEffect(gameState.player.x, gameState.player.y, '🛡️', '#00ffcc', 32);
+                    break;
+            }
+            
+            updateAbilityButtons();
+            updateUI();
+        }
+
+        function updateAbilityButtons() {
+            Object.keys(gameState.specialAbilities).forEach(abilityName => {
+                const ability = gameState.specialAbilities[abilityName];
+                const button = document.getElementById(`${abilityName}-btn`);
+                
+                if (ability.cooldown > 0 || gameState.player.mp < ability.cost) {
+                    button.classList.add('disabled');
+                    button.disabled = true;
+                } else {
+                    button.classList.remove('disabled');
+                    button.disabled = false;
+                }
+            });
+        }
+
+        // Combo System
+        function updateCombo(isCorrect) {
+            if (isCorrect) {
+                gameState.combo++;
+                gameState.maxCombo = Math.max(gameState.maxCombo, gameState.combo);
+                
+                // Combo bonuses
+                if (gameState.combo >= 5) {
+                    const bonus = gameState.combo * 10;
+                    gameState.player.score += bonus;
+                    addEffect(gameState.player.x, gameState.player.y - 40, `COMBO +${bonus}`, '#ffcc00', 18);
+                }
+                
+                document.getElementById('combo-display').classList.add('active');
+                document.getElementById('combo-number').textContent = gameState.combo;
+            } else {
+                gameState.combo = 0;
+                document.getElementById('combo-display').classList.remove('active');
+            }
+        }
+
+        // Reduce cooldowns after each question
+        function updateCooldowns() {
+            Object.values(gameState.specialAbilities).forEach(ability => {
+                if (ability.cooldown > 0) {
+                    ability.cooldown--;
+                }
+            });
+            
+            // Reduce shield turns
+            if (gameState.player.shieldTurns > 0) {
+                gameState.player.shieldTurns--;
+                if (gameState.player.shieldTurns <= 0) {
+                    gameState.specialAbilities.shield.active = false;
+                }
+            }
+        }
+
+        // Authentication UI Functions
+        async function showLogin() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+
+        async function showRegister() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.remove('hidden');
+        }
+
+        async function backToWelcome() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('register-screen').classList.add('hidden');
+            document.getElementById('welcome-screen').classList.remove('hidden');
+        }
+
+        async function performLogin() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!username || !password) {
+                updateAuthStatus('Please enter username and password', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    gameState.userToken = data.token;
+                    gameState.isAuthenticated = true;
+                    localStorage.setItem('userToken', data.token);
+                    
+                    // Load progress
+                    await initializeAuth();
+                    
+                    updateAuthStatus(`Welcome back, ${data.user.username}!`, 'authenticated');
+                    backToWelcome();
+                    startAutoSave();
+                    addNotification('Logged in successfully!', 'success');
+                } else {
+                    updateAuthStatus(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                updateAuthStatus('Network error', 'error');
+            }
+        }
+
+        async function performRegister() {
+            const username = document.getElementById('register-username').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            
+            if (!username || !email || !password) {
+                updateAuthStatus('Please fill all fields', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, email, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    gameState.userToken = data.token;
+                    gameState.isAuthenticated = true;
+                    localStorage.setItem('userToken', data.token);
+                    
+                    updateAuthStatus(`Account created! Welcome, ${data.user.username}!`, 'authenticated');
+                    backToWelcome();
+                    startAutoSave();
+                    addNotification('Account created successfully!', 'success');
+                } else {
+                    updateAuthStatus(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                console.error('Register error:', error);
+                updateAuthStatus('Network error', 'error');
+            }
+        }
+
+        function updateAuthStatus(message, type = 'info') {
+            const authStatus = document.getElementById('auth-status');
+            const authMessage = document.getElementById('auth-message');
+            
+            authMessage.textContent = message;
+            authStatus.className = `auth-status ${type}`;
+            
+            setTimeout(() => {
+                if (type === 'error') {
+                    authStatus.className = 'auth-status';
+                    authMessage.textContent = gameState.isAuthenticated 
+                        ? 'Logged in - Progress auto-saved' 
+                        : 'Play as guest or login to save progress';
+                }
+            }, 3000);
+        }
+
+        // Enhanced battle functions to trigger saves
+        function triggerSave() {
+            if (gameState.isAuthenticated) {
+                saveGameProgress();
+            }
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 AWS Quest Loading...');
+            
+            // Initialize game
+            initializeGame();
+            
+            // Attach event listeners
+            document.getElementById('start-adventure-btn').addEventListener('click', startBattle);
+            document.getElementById('show-levels-btn').addEventListener('click', showLevelSelection);
+            document.getElementById('back-to-menu-btn').addEventListener('click', backToMenu);
+            document.getElementById('attack-btn').addEventListener('click', attack);
+            document.getElementById('next-battle-btn').addEventListener('click', nextBattle);
+            
+            // Auth event listeners
+            document.getElementById('show-login-btn').addEventListener('click', showLogin);
+            document.getElementById('show-register-btn').addEventListener('click', showRegister);
+            document.getElementById('login-submit-btn').addEventListener('click', performLogin);
+            document.getElementById('register-submit-btn').addEventListener('click', performRegister);
+            document.getElementById('back-from-login-btn').addEventListener('click', backToWelcome);
+            document.getElementById('back-from-register-btn').addEventListener('click', backToWelcome);
+            
+            // Option selection listeners
+            document.querySelectorAll('.pixel-option').forEach((option, index) => {
+                option.addEventListener('click', () => selectOption(index));
+            });
+            
+            // Keyboard controls
+            document.addEventListener('keydown', function(e) {
+                switch(e.key) {
+                    case '1':
+                    case '2': 
+                    case '3':
+                    case '4':
+                        if (gameState.isInBattle) {
+                            const optionIndex = parseInt(e.key) - 1;
+                            if (optionIndex < 4) {
+                                selectOption(optionIndex);
+                            }
+                        }
+                        break;
+                    case 'Enter':
+                    case ' ':
+                        if (gameState.isInBattle && !document.getElementById('attack-btn').disabled) {
+                            attack();
+                        }
+                        break;
+                }
+            });
+            
+            console.log('✅ AWS Quest Ready!');
+        });
+    </script>
+</body>
+</html>

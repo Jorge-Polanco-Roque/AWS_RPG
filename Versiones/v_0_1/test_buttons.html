@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Button Test</title>
+    <style>
+        body { background: #1a1a1a; color: #fff; padding: 2rem; font-family: Arial, sans-serif; }
+        button { background: #8b45ff; color: white; border: none; padding: 1rem 2rem; margin: 1rem; cursor: pointer; border-radius: 8px; }
+        #result { background: #333; padding: 1rem; margin: 1rem 0; border-radius: 8px; min-height: 100px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Button Functionality Test</h1>
+    
+    <button id="test-btn-1">Test Button 1 (Event Listener)</button>
+    <button onclick="testButton2()">Test Button 2 (Onclick)</button>
+    <button id="test-btn-3">Test Button 3 (API Call)</button>
+    
+    <div id="result">Click buttons to test...</div>
+
+    <script>
+        console.log('Test script loaded successfully!');
+        
+        // Test 1: Event listener
+        document.getElementById('test-btn-1').addEventListener('click', function() {
+            document.getElementById('result').innerHTML = '✅ Event listener works!';
+            console.log('Event listener test successful');
+        });
+        
+        // Test 2: Onclick function
+        function testButton2() {
+            document.getElementById('result').innerHTML = '✅ Onclick handler works!';
+            console.log('Onclick handler test successful');
+        }
+        
+        // Test 3: API call
+        document.getElementById('test-btn-3').addEventListener('click', async function() {
+            document.getElementById('result').innerHTML = '🔄 Testing API call...';
+            
+            try {
+                const response = await fetch('/api/game/cosmic-entities');
+                const data = await response.json();
+                
+                if (data.success) {
+                    document.getElementById('result').innerHTML = '✅ API call successful!<br><br>' + 
+                        'Found ' + data.entities.length + ' cosmic entities:<br>' +
+                        data.entities.map(e => '- ' + e.name).join('<br>');
+                } else {
+                    document.getElementById('result').innerHTML = '❌ API call failed: ' + JSON.stringify(data);
+                }
+            } catch (error) {
+                document.getElementById('result').innerHTML = '❌ API error: ' + error.message;
+                console.error('API test error:', error);
+            }
+        });
+        
+        // DOM ready test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready test successful');
+        });
+    </script>
+</body>
+</html>

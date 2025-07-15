@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Test - Cosmic Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 2rem;
+        }
+        .test-button {
+            background: #8b45ff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            margin: 1rem;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        .test-button:hover {
+            background: #a855ff;
+        }
+        #result {
+            background: #333;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            min-height: 100px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Debug Test - Cosmic Game</h1>
+    <p>Testing basic functionality...</p>
+    
+    <button class="test-button" id="test-api">Test API Call</button>
+    <button class="test-button" id="test-console">Test Console Log</button>
+    <button class="test-button" id="test-fetch">Test Fetch</button>
+    
+    <div id="result">Ready to test...</div>
+
+    <script>
+        console.log('Debug script loaded!');
+        
+        // Test 1: Basic API call
+        document.getElementById('test-api').addEventListener('click', async function() {
+            console.log('Test API button clicked');
+            document.getElementById('result').textContent = 'Testing API call...';
+            
+            try {
+                const response = await fetch('/api/game/cosmic-entities');
+                console.log('Response received:', response);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Data received:', data);
+                
+                document.getElementById('result').textContent = 'API Success!\n\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('API Error:', error);
+                document.getElementById('result').textContent = 'API Error: ' + error.message;
+            }
+        });
+        
+        // Test 2: Console logging
+        document.getElementById('test-console').addEventListener('click', function() {
+            console.log('Console test button clicked');
+            console.warn('This is a warning');
+            console.error('This is an error test');
+            document.getElementById('result').textContent = 'Console tests executed. Check browser console.';
+        });
+        
+        // Test 3: Fetch test
+        document.getElementById('test-fetch').addEventListener('click', async function() {
+            console.log('Fetch test button clicked');
+            document.getElementById('result').textContent = 'Testing fetch...';
+            
+            try {
+                const response = await fetch('https://httpbin.org/json');
+                const data = await response.json();
+                document.getElementById('result').textContent = 'External fetch works!\n\n' + JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('result').textContent = 'External fetch failed: ' + error.message;
+            }
+        });
+        
+        // Test on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded');
+            document.getElementById('result').textContent = 'DOM loaded successfully. Click buttons to test.';
+        });
+    </script>
+</body>
+</html>
