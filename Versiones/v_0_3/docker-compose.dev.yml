@@ -1,0 +1,77 @@
+version: '3.8'
+
+services:
+  architects-codex:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: architects-codex-dev
+    ports:
+      - "3030:5000"
+      - "3000:3000"  # For React dev server
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - JWT_SECRET=cosmic_horror_dev_secret
+    volumes:
+      - ./src:/app/src
+      - ./client/src:/app/client/src
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - /app/node_modules
+      - /app/client/node_modules
+    restart: unless-stopped
+    networks:
+      - cosmic-network
+    command: npm run dev
+
+  postgres-dev:
+    image: postgres:15-alpine
+    container_name: architects-codex-db-dev
+    environment:
+      - POSTGRES_DB=cosmic_codex_dev
+      - POSTGRES_USER=cosmic_user
+      - POSTGRES_PASSWORD=cosmic_password_dev
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    networks:
+      - cosmic-network
+
+  redis-dev:
+    image: redis:7-alpine
+    container_name: architects-codex-redis-dev
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_dev_data:/data
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    networks:
+      - cosmic-network
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: architects-codex-pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@cosmic.com
+      - PGADMIN_DEFAULT_PASSWORD=cosmic_admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres-dev
+    restart: unless-stopped
+    networks:
+      - cosmic-network
+
+volumes:
+  postgres_dev_data:
+    driver: local
+  redis_dev_data:
+    driver: local
+
+networks:
+  cosmic-network:
+    driver: bridge

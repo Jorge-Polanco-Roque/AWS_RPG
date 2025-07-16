@@ -1,26 +1,37 @@
-export const cosmicTheme = {
+export const cyberpunkTheme = {
   colors: {
-    primary: '#8a2be2',
-    secondary: '#ff0066',
-    accent: '#00ff88',
-    background: '#0a0a0a',
-    backgroundLight: '#1a0d26',
-    backgroundMedium: '#2d1b36',
-    surface: '#4a0e4e',
-    text: '#e6d7ff',
-    textSecondary: '#b794f6',
-    textMuted: '#666',
-    success: '#00ff88',
-    error: '#ff0066',
-    warning: '#ffd700',
-    info: '#8a2be2',
+    primary: '#00FFFF',       // Cyan neon
+    secondary: '#FF00FF',     // Magenta neon
+    accent: '#00FF00',        // Green neon
+    background: '#0A0A0A',    // Deep black
+    backgroundLight: '#1A1A2E', // Dark purple
+    backgroundMedium: '#16213E', // Dark blue
+    backgroundDark: '#0F0F0F',   // Pure black
+    surface: '#1A1A2E',       // Dark purple surface
+    surfaceHover: '#16213E',  // Dark blue hover
+    text: '#E0E0E0',         // Light gray
+    textSecondary: '#00FFFF', // Cyan text
+    textMuted: '#808080',     // Gray muted
+    textNeon: '#FF00FF',      // Magenta neon text
+    success: '#00FF00',       // Green neon
+    error: '#FF0040',         // Red neon
+    warning: '#FFD700',       // Gold neon
+    info: '#00FFFF',          // Cyan info
+    border: '#00FFFF',        // Cyan border
+    borderLight: '#FF00FF',   // Magenta border
+    neonBlue: '#0080FF',      // Neon blue
+    neonPink: '#FF1493',      // Deep pink
+    neonPurple: '#8A2BE2',    // Blue violet
+    neonOrange: '#FF4500',    // Orange red
+    hologram: 'rgba(0, 255, 255, 0.1)', // Cyan with transparency
   },
   fonts: {
-    primary: "'Griffy', cursive",
-    title: "'Creepster', cursive",
-    horror: "'Nosifer', cursive",
-    button: "'Butcherman', cursive",
-    eater: "'Eater', cursive",
+    primary: "'Orbitron', 'Courier New', monospace",
+    title: "'Exo 2', 'Orbitron', sans-serif",
+    display: "'Audiowide', 'Orbitron', cursive",
+    mono: "'Source Code Pro', 'Courier New', monospace",
+    button: "'Rajdhani', 'Orbitron', sans-serif",
+    cyber: "'Electrolize', 'Orbitron', sans-serif",
   },
   breakpoints: {
     mobile: '480px',
@@ -44,19 +55,31 @@ export const cosmicTheme = {
     round: '50%',
   },
   shadows: {
-    sm: '0 2px 8px rgba(0, 0, 0, 0.1)',
-    md: '0 4px 16px rgba(0, 0, 0, 0.2)',
-    lg: '0 8px 32px rgba(0, 0, 0, 0.3)',
-    cosmic: '0 0 20px rgba(138, 43, 226, 0.5)',
-    horror: '0 0 30px rgba(255, 0, 102, 0.5)',
+    xs: '0 0 5px rgba(0, 255, 255, 0.2)',
+    sm: '0 0 10px rgba(0, 255, 255, 0.3)',
+    md: '0 0 15px rgba(0, 255, 255, 0.4)',
+    lg: '0 0 25px rgba(0, 255, 255, 0.5)',
+    xl: '0 0 35px rgba(0, 255, 255, 0.6)',
+    '2xl': '0 0 50px rgba(0, 255, 255, 0.8)',
+    inner: 'inset 0 0 10px rgba(0, 255, 255, 0.3)',
+    neonCyan: '0 0 20px #00FFFF, 0 0 40px #00FFFF, 0 0 60px #00FFFF',
+    neonMagenta: '0 0 20px #FF00FF, 0 0 40px #FF00FF, 0 0 60px #FF00FF',
+    neonGreen: '0 0 20px #00FF00, 0 0 40px #00FF00, 0 0 60px #00FF00',
+    neonOrange: '0 0 20px #FF4500, 0 0 40px #FF4500, 0 0 60px #FF4500',
+    hologram: '0 0 30px rgba(0, 255, 255, 0.5), inset 0 0 30px rgba(0, 255, 255, 0.1)',
   },
   animations: {
-    pulse: 'pulse 2s ease-in-out infinite alternate',
-    float: 'float 3s ease-in-out infinite',
-    rotate: 'rotate 8s linear infinite',
-    shimmer: 'shimmer 2s infinite',
-    breathe: 'breathe 4s ease-in-out infinite',
-    blink: 'blink 3s ease-in-out infinite',
+    fadeIn: 'fadeIn 0.5s ease-out',
+    slideUp: 'slideUp 0.4s ease-out',
+    slideDown: 'slideDown 0.4s ease-out',
+    scaleIn: 'scaleIn 0.3s ease-out',
+    spin: 'spin 2s linear infinite',
+    pulse: 'neonPulse 2s ease-in-out infinite',
+    bounce: 'cyberbounce 1.5s infinite',
+    glitch: 'glitch 0.3s ease-in-out infinite alternate',
+    flicker: 'flicker 0.15s infinite linear',
+    typewriter: 'typewriter 3s steps(40, end)',
+    scanline: 'scanline 2s linear infinite',
   },
   zIndex: {
     background: -1,

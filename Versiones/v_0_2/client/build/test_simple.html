@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Quest - Button Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a2e;
+            color: white;
+        }
+        .test-button {
+            background: #0066ff;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .test-button:hover {
+            background: #0052cc;
+        }
+        .result {
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #333;
+            border-radius: 5px;
+            background: #2a2a3e;
+        }
+        .success {
+            color: #00ff00;
+        }
+        .error {
+            color: #ff0000;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎮 AWS Quest - Button Test</h1>
+    
+    <div class="result" id="result">
+        <h2>Test Results:</h2>
+        <div id="test-output">Click buttons to test...</div>
+    </div>
+    
+    <button class="test-button" id="start-btn">START GAME</button>
+    <button class="test-button" id="levels-btn">SELECT LEVEL</button>
+    <button class="test-button" id="components-btn">AWS COMPONENTS</button>
+    <button class="test-button" id="login-btn">LOGIN</button>
+    
+    <h2>Manual Test:</h2>
+    <button class="test-button" onclick="manualTest()">Manual Click Test</button>
+    
+    <script>
+        const output = document.getElementById('test-output');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const color = type === 'success' ? 'green' : type === 'error' ? 'red' : 'white';
+            output.innerHTML += `<div style="color: ${color}">[${timestamp}] ${message}</div>`;
+            console.log(message);
+        }
+        
+        function manualTest() {
+            log('✅ Manual test button clicked!', 'success');
+        }
+        
+        // Test event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            log('🚀 Test page loaded', 'success');
+            
+            // Test individual buttons
+            const startBtn = document.getElementById('start-btn');
+            const levelsBtn = document.getElementById('levels-btn');
+            const componentsBtn = document.getElementById('components-btn');
+            const loginBtn = document.getElementById('login-btn');
+            
+            if (startBtn) {
+                startBtn.addEventListener('click', function() {
+                    log('✅ START GAME clicked!', 'success');
+                });
+                log('Start button listener attached', 'info');
+            } else {
+                log('❌ Start button not found', 'error');
+            }
+            
+            if (levelsBtn) {
+                levelsBtn.addEventListener('click', function() {
+                    log('✅ SELECT LEVEL clicked!', 'success');
+                });
+                log('Levels button listener attached', 'info');
+            } else {
+                log('❌ Levels button not found', 'error');
+            }
+            
+            if (componentsBtn) {
+                componentsBtn.addEventListener('click', function() {
+                    log('✅ AWS COMPONENTS clicked!', 'success');
+                });
+                log('Components button listener attached', 'info');
+            } else {
+                log('❌ Components button not found', 'error');
+            }
+            
+            if (loginBtn) {
+                loginBtn.addEventListener('click', function() {
+                    log('✅ LOGIN clicked!', 'success');
+                });
+                log('Login button listener attached', 'info');
+            } else {
+                log('❌ Login button not found', 'error');
+            }
+            
+            // Test event delegation
+            document.body.addEventListener('click', function(e) {
+                if (e.target.classList.contains('test-button')) {
+                    log(`🎯 Event delegation caught: ${e.target.textContent}`, 'success');
+                }
+            });
+            
+            log('✅ All tests initialized', 'success');
+        });
+    </script>
+</body>
+</html>

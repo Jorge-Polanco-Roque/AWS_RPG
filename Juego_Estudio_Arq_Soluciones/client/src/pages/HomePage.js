@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import { useAuth } from '../contexts/AuthContext';
 import { useSound } from '../contexts/SoundContext';
-import CosmicParticles from '../components/CosmicParticles';
+import CyberParticles from '../components/CyberParticles';
 import EntityPortrait from '../components/EntityPortrait';
 
 const HomePage = () => {
@@ -12,47 +12,71 @@ const HomePage = () => {
   const { user } = useAuth();
   const { playSound } = useSound();
   const [currentEntity, setCurrentEntity] = useState(0);
+  const [playerLevel, setPlayerLevel] = useState(1);
+  const [playerXP, setPlayerXP] = useState(0);
 
-  const cosmicEntities = [
+  // Cyberpunk RPG Characters
+  const cyberpunkCharacters = [
     {
-      name: "Azathoth",
-      title: "The Blind Idiot God of Scaling",
-      description: "Master of Auto Scaling and Load Balancing nightmares",
-      emoji: "🌀"
+      name: "NEXUS-7",
+      title: "Main Character - Player",
+      description: "Advanced AI architect specialized in cloud infrastructure optimization",
+      emoji: "🤖",
+      level: playerLevel,
+      xp: playerXP,
+      isPlayer: true
     },
     {
-      name: "Cthulhu",
-      title: "The Dreaming Database",
-      description: "Sleeps in the depths of RDS until queries awaken it",
-      emoji: "🐙"
+      name: "CIPHER",
+      title: "Security Specialist",
+      description: "Elite hacker focusing on IAM and security protocols",
+      emoji: "🔐",
+      level: Math.floor(Math.random() * 5) + 8,
+      xp: Math.floor(Math.random() * 1000) + 2000
     },
     {
-      name: "Nyarlathotep",
-      title: "The Crawling Chaos of Networks",
-      description: "Weaves the dark networks connecting all digital realms",
-      emoji: "🕷️"
+      name: "MATRIX",
+      title: "Database Oracle",
+      description: "Data architect managing vast digital databases and storage systems",
+      emoji: "🗄️",
+      level: Math.floor(Math.random() * 4) + 6,
+      xp: Math.floor(Math.random() * 800) + 1500
     },
     {
-      name: "Shub-Niggurath",
-      title: "The Black Goat of Storage",
-      description: "Mother of all S3 buckets and infinite storage spawn",
-      emoji: "🐐"
+      name: "VOID",
+      title: "Network Ghost",
+      description: "Phantom specialist in VPC configurations and network architecture",
+      emoji: "👻",
+      level: Math.floor(Math.random() * 6) + 5,
+      xp: Math.floor(Math.random() * 1200) + 1200
     },
     {
-      name: "Yog-Sothoth",
-      title: "The Key and the Gate",
-      description: "Guardian of all IAM permissions and security gates",
-      emoji: "🗝️"
+      name: "QUANTUM",
+      title: "Processing Unit",
+      description: "High-performance computing specialist managing EC2 and Lambda functions",
+      emoji: "⚡",
+      level: Math.floor(Math.random() * 3) + 7,
+      xp: Math.floor(Math.random() * 900) + 1800
     }
   ];
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentEntity((prev) => (prev + 1) % cosmicEntities.length);
+      setCurrentEntity((prev) => (prev + 1) % cyberpunkCharacters.length);
     }, 4000);
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    // Calculate player level based on user stats (mock for now)
+    if (user) {
+      const mockXP = Math.floor(Math.random() * 500) + 100;
+      const calculatedLevel = Math.floor(mockXP / 100) + 1;
+      setPlayerXP(mockXP);
+      setPlayerLevel(calculatedLevel);
+    }
+  }, [user]);
 
   const handleStartGame = () => {
     playSound('button');
@@ -68,9 +92,18 @@ const HomePage = () => {
     navigate('/leaderboard');
   };
 
+  const handleComponentStudy = (component) => {
+    playSound('button');
+    if (user) {
+      navigate(`/game?component=${component}`);
+    } else {
+      navigate('/login');
+    }
+  };
+
   return (
     <HomeContainer>
-      <CosmicParticles />
+      <CyberParticles />
       
       <ContentWrapper>
         <motion.div
@@ -78,11 +111,11 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <MainTitle className="cosmic-title">
-            The Architect's Codex
+          <MainTitle className="cyberpunk-title" data-text="NEURO-ARCHITECT">
+            NEURO-ARCHITECT
           </MainTitle>
           <Subtitle>
-            Cosmic Horror AWS Certification Study Experience
+            Cyberpunk AWS Cloud Infrastructure Training Protocol
           </Subtitle>
         </motion.div>
 
@@ -91,17 +124,33 @@ const HomePage = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <EntityShowcase>
-            <EntityPortrait 
-              entity={cosmicEntities[currentEntity]} 
-              size="large"
-            />
-            <EntityDescription>
-              <EntityName>{cosmicEntities[currentEntity].name}</EntityName>
-              <EntityTitle>{cosmicEntities[currentEntity].title}</EntityTitle>
-              <EntityText>{cosmicEntities[currentEntity].description}</EntityText>
-            </EntityDescription>
-          </EntityShowcase>
+          <CharacterShowcase>
+            <CharacterPortrait>
+              <CharacterAvatar>{cyberpunkCharacters[currentEntity].emoji}</CharacterAvatar>
+              <CharacterLevel isPlayer={cyberpunkCharacters[currentEntity].isPlayer}>
+                LVL {cyberpunkCharacters[currentEntity].level}
+              </CharacterLevel>
+              {cyberpunkCharacters[currentEntity].isPlayer && (
+                <XPBar>
+                  <XPFill width={(cyberpunkCharacters[currentEntity].xp % 100)}>
+                    {cyberpunkCharacters[currentEntity].xp} XP
+                  </XPFill>
+                </XPBar>
+              )}
+            </CharacterPortrait>
+            <CharacterInfo>
+              <CharacterName isPlayer={cyberpunkCharacters[currentEntity].isPlayer}>
+                {cyberpunkCharacters[currentEntity].name}
+              </CharacterName>
+              <CharacterTitle>{cyberpunkCharacters[currentEntity].title}</CharacterTitle>
+              <CharacterText>{cyberpunkCharacters[currentEntity].description}</CharacterText>
+              {!cyberpunkCharacters[currentEntity].isPlayer && (
+                <CharacterStats>
+                  XP: {cyberpunkCharacters[currentEntity].xp.toLocaleString()}
+                </CharacterStats>
+              )}
+            </CharacterInfo>
+          </CharacterShowcase>
         </motion.div>
 
         <motion.div
@@ -109,30 +158,30 @@ const HomePage = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 1 }}
         >
-          <GameDescription className="cosmic-card">
-            <h2>Enter the Cosmic Realm</h2>
+          <GameDescription className="cyberpunk-card">
+            <h2>INITIATE TRAINING PROTOCOL</h2>
             <p>
-              Face the eldritch horrors of AWS while mastering the Solutions Architect Associate certification. 
-              Each correct answer banishes dark forces and increases your cosmic knowledge, while mistakes 
-              drain your sanity and awaken ancient evils.
+              Jack into the neural network and master AWS cloud architecture through advanced AI-assisted learning. 
+              Execute scenario-based training missions, upgrade your neural pathways, 
+              and compete against other cyber-architects in the digital realm.
             </p>
             
             <FeatureList>
               <FeatureItem>
-                <span className="feature-icon">🌌</span>
-                <strong>Realistic Exam Questions:</strong> 65 scenario-based questions matching real AWS certification difficulty
+                <span className="feature-icon">⚡</span>
+                <strong>Neural Training Modules:</strong> 65 high-intensity scenarios simulating real cloud architecture challenges
               </FeatureItem>
               <FeatureItem>
-                <span className="feature-icon">🎮</span>
-                <strong>Immersive Horror Theme:</strong> Study AWS in a uniquely engaging cosmic horror atmosphere
+                <span className="feature-icon">🔧</span>
+                <strong>Component Specialization:</strong> Master individual system modules through targeted neural pathways
               </FeatureItem>
               <FeatureItem>
-                <span className="feature-icon">📊</span>
-                <strong>Progress Tracking:</strong> Monitor your sanity, knowledge shards, and certification readiness
+                <span className="feature-icon">📈</span>
+                <strong>XP & Level System:</strong> Gain experience points and level up your cyber-architect abilities
               </FeatureItem>
               <FeatureItem>
-                <span className="feature-icon">🏆</span>
-                <strong>Competitive Leaderboard:</strong> Compete with other architects ascending to cosmic mastery
+                <span className="feature-icon">🏅</span>
+                <strong>Digital Leaderboard:</strong> Compete against other AI entities in the neural matrix
               </FeatureItem>
             </FeatureList>
           </GameDescription>
@@ -145,18 +194,54 @@ const HomePage = () => {
         >
           <ButtonContainer>
             <ActionButton 
-              className="eldritch-button primary" 
+              className="cyberpunk-button primary" 
               onClick={handleStartGame}
             >
-              {user ? 'Continue Your Journey' : 'Begin the Ritual'}
+              {user ? 'RESUME TRAINING' : 'JACK IN'}
             </ActionButton>
             <ActionButton 
-              className="eldritch-button secondary" 
+              className="cyberpunk-button secondary" 
               onClick={handleLeaderboard}
             >
-              Cosmic Leaderboard
+              NEURAL RANKINGS
             </ActionButton>
           </ButtonContainer>
+
+          <ComponentsMenu className="cyberpunk-card">
+            <h2>NEURAL PATHWAY SPECIALIZATION</h2>
+            <ComponentGrid>
+              <ComponentCard onClick={() => handleComponentStudy('storage')}>
+                <ComponentIcon>🗃️</ComponentIcon>
+                <ComponentTitle>DATA STORAGE</ComponentTitle>
+                <ComponentDesc>S3 // EBS // EFS // FSx</ComponentDesc>
+              </ComponentCard>
+              <ComponentCard onClick={() => handleComponentStudy('processing')}>
+                <ComponentIcon>⚡</ComponentIcon>
+                <ComponentTitle>PROCESSING CORES</ComponentTitle>
+                <ComponentDesc>EC2 // Lambda // ECS // Batch</ComponentDesc>
+              </ComponentCard>
+              <ComponentCard onClick={() => handleComponentStudy('pipelines')}>
+                <ComponentIcon>🔗</ComponentIcon>
+                <ComponentTitle>DEPLOY CHAINS</ComponentTitle>
+                <ComponentDesc>CodePipeline // CodeBuild // CodeDeploy</ComponentDesc>
+              </ComponentCard>
+              <ComponentCard onClick={() => handleComponentStudy('roles')}>
+                <ComponentIcon>🛡️</ComponentIcon>
+                <ComponentTitle>ACCESS MATRIX</ComponentTitle>
+                <ComponentDesc>IAM // Security Groups // NACLs</ComponentDesc>
+              </ComponentCard>
+              <ComponentCard onClick={() => handleComponentStudy('networking')}>
+                <ComponentIcon>🌐</ComponentIcon>
+                <ComponentTitle>NET PROTOCOLS</ComponentTitle>
+                <ComponentDesc>VPC // Route 53 // CloudFront</ComponentDesc>
+              </ComponentCard>
+              <ComponentCard onClick={() => handleComponentStudy('database')}>
+                <ComponentIcon>🗄️</ComponentIcon>
+                <ComponentTitle>DATA NODES</ComponentTitle>
+                <ComponentDesc>RDS // DynamoDB // ElastiCache</ComponentDesc>
+              </ComponentCard>
+            </ComponentGrid>
+          </ComponentsMenu>
         </motion.div>
 
         {user && (
@@ -165,8 +250,8 @@ const HomePage = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 1.4 }}
           >
-            <WelcomeMessage className="cosmic-card">
-              Welcome back, {user.username}. The cosmic entities await your return...
+            <WelcomeMessage className="cyberpunk-card">
+              NEURAL LINK ESTABLISHED {'//'} Welcome back, {user.username.toUpperCase()} {'//'} Ready to resume training protocol?
             </WelcomeMessage>
           </motion.div>
         )}
@@ -214,7 +299,7 @@ const Subtitle = styled.h2`
   }
 `;
 
-const EntityShowcase = styled.div`
+const CharacterShowcase = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -227,7 +312,74 @@ const EntityShowcase = styled.div`
   }
 `;
 
-const EntityDescription = styled.div`
+const CharacterPortrait = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const CharacterAvatar = styled.div`
+  font-size: 4rem;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #00FFFF;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.1), rgba(255, 0, 255, 0.1));
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  clip-path: polygon(10px 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+  animation: neonPulse 3s ease-in-out infinite;
+`;
+
+const CharacterLevel = styled.div`
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: ${props => props.isPlayer ? 
+    'linear-gradient(135deg, #00FF00, #00CC00)' : 
+    'linear-gradient(135deg, #FF00FF, #CC00CC)'
+  };
+  color: black;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  font-family: ${props => props.theme.fonts.mono};
+  text-shadow: none;
+`;
+
+const XPBar = styled.div`
+  width: 120px;
+  height: 8px;
+  background: rgba(0, 255, 255, 0.2);
+  border: 1px solid #00FFFF;
+  margin-top: 10px;
+  position: relative;
+  overflow: hidden;
+`;
+
+const XPFill = styled.div`
+  width: ${props => props.width}%;
+  height: 100%;
+  background: linear-gradient(90deg, #00FFFF, #00FF00);
+  transition: width 0.5s ease;
+  position: relative;
+  
+  &::before {
+    content: '${props => props.children}';
+    position: absolute;
+    top: -20px;
+    right: 0;
+    font-size: 0.7rem;
+    color: #00FFFF;
+    font-family: ${props => props.theme.fonts.mono};
+  }
+`;
+
+const CharacterInfo = styled.div`
   text-align: center;
   max-width: 400px;
   
@@ -236,24 +388,39 @@ const EntityDescription = styled.div`
   }
 `;
 
-const EntityName = styled.h3`
+const CharacterName = styled.h3`
   font-size: 2rem;
-  color: ${props => props.theme.colors.secondary};
+  color: ${props => props.isPlayer ? '#00FF00' : '#00FFFF'};
   margin-bottom: 0.5rem;
-  font-family: ${props => props.theme.fonts.horror};
+  font-family: ${props => props.theme.fonts.display};
+  text-shadow: 0 0 10px currentColor;
+  letter-spacing: 0.1em;
 `;
 
-const EntityTitle = styled.h4`
+const CharacterTitle = styled.h4`
   font-size: 1.2rem;
-  color: ${props => props.theme.colors.primary};
+  color: ${props => props.theme.colors.secondary};
   margin-bottom: 1rem;
-  font-family: ${props => props.theme.fonts.button};
+  font-family: ${props => props.theme.fonts.cyber};
+  text-transform: uppercase;
 `;
 
-const EntityText = styled.p`
+const CharacterText = styled.p`
   font-size: 1rem;
   color: ${props => props.theme.colors.textSecondary};
   line-height: 1.6;
+  font-family: ${props => props.theme.fonts.primary};
+`;
+
+const CharacterStats = styled.div`
+  margin-top: 1rem;
+  padding: 0.5rem;
+  background: rgba(0, 255, 255, 0.1);
+  border: 1px solid #00FFFF;
+  border-radius: 4px;
+  font-family: ${props => props.theme.fonts.mono};
+  font-size: 0.9rem;
+  color: #00FFFF;
 `;
 
 const GameDescription = styled.div`
@@ -332,6 +499,60 @@ const WelcomeMessage = styled.div`
   font-size: 1.1rem;
   color: ${props => props.theme.colors.accent};
   text-align: center;
+`;
+
+const ComponentsMenu = styled.div`
+  margin: 3rem 0;
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: ${props => props.theme.colors.primary};
+  }
+`;
+
+const ComponentGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+`;
+
+const ComponentCard = styled.button`
+  background: linear-gradient(135deg, ${props => props.theme.colors.surface}, ${props => props.theme.colors.surfaceHover});
+  border: 1px solid ${props => props.theme.colors.border};
+  border-radius: 16px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  box-shadow: ${props => props.theme.shadows.sm};
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: ${props => props.theme.shadows.md};
+    border-color: ${props => props.theme.colors.primary};
+    background: linear-gradient(135deg, ${props => props.theme.colors.surfaceHover}, ${props => props.theme.colors.backgroundMedium});
+  }
+`;
+
+const ComponentIcon = styled.div`
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+`;
+
+const ComponentTitle = styled.h3`
+  color: ${props => props.theme.colors.text};
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+`;
+
+const ComponentDesc = styled.p`
+  color: ${props => props.theme.colors.textMuted};
+  font-size: 0.9rem;
+  margin: 0;
+  line-height: 1.4;
 `;
 
 export default HomePage;

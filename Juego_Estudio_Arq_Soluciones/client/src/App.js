@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ThemeProvider } from 'styled-components';
 import { Toaster } from 'react-hot-toast';
 import { GlobalStyles } from './styles/GlobalStyles';
-import { cosmicTheme } from './styles/theme';
+import { cyberpunkTheme } from './styles/theme';
 import { AuthProvider } from './contexts/AuthContext';
 import { GameProvider } from './contexts/GameContext';
 import { SoundProvider } from './contexts/SoundContext';
@@ -14,7 +14,7 @@ import RegisterPage from './pages/RegisterPage';
 import GamePage from './pages/GamePage';
 import LeaderboardPage from './pages/LeaderboardPage';
 import ProfilePage from './pages/ProfilePage';
-import CosmicBackground from './components/CosmicBackground';
+import CyberpunkBackground from './components/CyberpunkBackground';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const queryClient = new QueryClient({
@@ -29,13 +29,13 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider theme={cosmicTheme}>
+      <ThemeProvider theme={cyberpunkTheme}>
         <AuthProvider>
           <SoundProvider>
             <GameProvider>
               <Router>
                 <GlobalStyles />
-                <CosmicBackground />
+                <CyberpunkBackground />
                 <div className="App">
                   <Routes>
                     <Route path="/" element={<HomePage />} />
