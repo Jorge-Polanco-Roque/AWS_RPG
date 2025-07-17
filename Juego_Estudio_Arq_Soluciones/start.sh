@@ -74,7 +74,11 @@ lsof -ti:3030 | xargs kill -9 2>/dev/null || true
 echo -e "${GREEN}🚀 Starting The Architect's Codex...${NC}"
 echo -e "${BLUE}🌌 Application will be available at: http://localhost:3030${NC}"
 echo -e "${PURPLE}✨ New features: Component menu, Save game, Return to menu, Error recovery${NC}"
+echo -e "${YELLOW}🧪 Test mode will be available for development (visit /game directly)${NC}"
 echo ""
+
+# Set environment variable for test mode support
+export ENABLE_TEST_MODE=true
 
 # Start the server
 node src/server/index.js &

@@ -1,0 +1,46 @@
+{
+  "name": "architects-codex-cosmic-horror-aws",
+  "version": "1.0.0",
+  "description": "Cosmic Horror themed AWS Solutions Architect Associate certification study game",
+  "main": "src/server/index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "nodemon src/server/index.js",
+    "client:dev": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "node src/server/index.js",
+    "install:all": "npm install && cd client && npm install",
+    "test:game-page": "node test-game-page.js",
+    "test:game-page-complete": "node test-game-page-complete.js",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "aws",
+    "certification",
+    "study",
+    "game",
+    "cosmic",
+    "horror"
+  ],
+  "author": "AWS Study Game",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "helmet": "^7.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.1.6",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "nodemon": "^3.0.1",
+    "puppeteer": "^24.12.1"
+  }
+}

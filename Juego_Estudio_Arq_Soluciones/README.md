@@ -1,53 +1,54 @@
-# ⚔️ AWS Architect Battle Arena
+# 🤖 NEURO-ARCHITECT: Cyberpunk AWS Study Game
 
-A modern, turn-based battle game for mastering AWS Solutions Architect Associate certification. Engage in strategic combat while learning real AWS concepts through 200+ professional-quality questions.
+A cyberpunk-themed interactive training protocol for mastering AWS Solutions Architect Associate certification. Jack into the neural matrix and advance through high-intensity scenarios while learning real AWS cloud architecture through 65+ professional-quality questions.
 
-![AWS Battle Arena](https://img.shields.io/badge/AWS-Battle%20Arena-FF9900?style=for-the-badge&logo=amazon-aws)
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+![NEURO-ARCHITECT](https://img.shields.io/badge/NEURO--ARCHITECT-Cyberpunk%20AWS%20Training-00FFFF?style=for-the-badge&logo=amazon-aws)
+![License](https://img.shields.io/badge/License-MIT-00FF00?style=for-the-badge)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js)
-![React](https://img.shields.io/badge/Frontend-Modern%20Vanilla%20JS-F7DF1E?style=for-the-badge&logo=javascript)
+![React](https://img.shields.io/badge/Frontend-React%2018-61DAFB?style=for-the-badge&logo=react)
 
-## 🎮 Game Features
+## 🎮 Neural Training Features
 
-### ⚡ Battle System
-- **Turn-based Combat**: Strategic question-answering mechanic
-- **Real-time Scoring**: Immediate feedback with visual battle effects
-- **Level Progression**: Advance through architect levels with experience
-- **Win Streaks**: Build momentum with consecutive correct answers
-- **Live Statistics**: Track accuracy, level, and performance metrics
+### ⚡ Cyberpunk Battle System
+- **Neural Combat Protocol**: Advanced AI-driven question scenarios in immersive cyberpunk environments
+- **Real-time Neural Feedback**: Instant response system with cyberpunk visual effects and audio cues
+- **Architect Level Progression**: Evolve from basic coder to elite cyber-architect through XP advancement
+- **Neural Link Streaks**: Build momentum and unlock special abilities with consecutive correct responses
+- **Live Biometric Stats**: Track neural efficiency, architect level, and cognitive performance metrics
 
-### 📚 Learning Engine
-- **200+ Professional Questions**: Covers all 4 AWS SA-A exam domains
-- **Realistic Scenarios**: Questions mirror actual certification exam difficulty
-- **Detailed Explanations**: Learn from both correct and incorrect answers
-- **Domain Mastery**: Balanced coverage across all AWS knowledge areas
-- **Difficulty Scaling**: Questions adapt to your current skill level
+### 🧠 Advanced Learning Matrix
+- **65+ High-Intensity Scenarios**: Comprehensive coverage of all AWS Solutions Architect domains in cyberpunk contexts
+- **Neural Pathway Simulation**: Questions designed to mirror real-world cloud architecture challenges
+- **AI-Powered Explanations**: Deep learning insights from both successful and failed neural transmissions
+- **Domain Specialization**: Master individual system modules through targeted neural pathways
+- **Adaptive Intelligence**: Dynamic difficulty scaling based on your neural capacity
 
-### 🎨 Modern Interface
-- **Minimalist Design**: Clean, school-modern aesthetic inspired by contemporary educational platforms
-- **Responsive Layout**: Optimized for desktop and mobile devices
-- **Smooth Animations**: Fluid transitions and engaging visual feedback
-- **Accessibility**: WCAG-compliant design with proper contrast and navigation
-- **Dark Theme**: Comfortable viewing experience for extended study sessions
+### 🎨 Cyberpunk Interface
+- **Neural Matrix Design**: Immersive cyberpunk aesthetic with neon colors (cyan, magenta, green)
+- **Responsive Neural Grid**: Optimized for all devices with fluid animations and transitions
+- **Real-time Visual Effects**: Dynamic particle systems and glitch effects
+- **Accessibility**: Full keyboard navigation and contrast optimization for extended neural sessions
+- **Integrated Authentication**: Seamless login/registration modal system without page redirects
 
-## 🏗️ Architecture
+## 🏗️ Neural Architecture
 
 ### Technology Stack
-- **Backend**: Node.js + Express + SQLite
-- **Frontend**: Modern Vanilla JavaScript + CSS Grid/Flexbox
-- **Security**: JWT authentication + Helmet security headers
-- **Deployment**: Docker containers + multiple environment configs
-- **Monitoring**: Winston logging + comprehensive error handling
+- **Backend**: Node.js + Express + SQLite + JWT Authentication
+- **Frontend**: React 18 + styled-components + framer-motion + Context API
+- **Security**: JWT tokens + Helmet security headers + CORS protection
+- **Deployment**: Docker containers + production build optimization
+- **Monitoring**: Winston logging + comprehensive error handling + progress persistence
 
-### System Design
+### Cyberpunk System Design
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Backend API   │    │   Database      │
+│   React UI      │    │   Express API   │    │   SQLite DB     │
 │                 │    │                 │    │                 │
-│ • Battle Arena  │◄──►│ • Auth System   │◄──►│ • User Profiles │
-│ • Progress UI   │    │ • Game Logic    │    │ • Game Sessions │
-│ • Statistics    │    │ • Question DB   │    │ • Statistics    │
-│ • Leaderboard   │    │ • Scoring       │    │ • Leaderboard   │
+│ • Neural Arena  │◄──►│ • Auth System   │◄──►│ • User Profiles │
+│ • Progress Hub  │    │ • Game Engine   │    │ • Game Progress │
+│ • Stats Matrix  │    │ • Question Pool │    │ • Statistics    │
+│ • Leaderboard   │    │ • Score Logic   │    │ • Achievements  │
+│ • Modal Auth    │    │ • Progress API  │    │ • Session Data  │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -60,15 +61,18 @@ A modern, turn-based battle game for mastering AWS Solutions Architect Associate
 
 ### Installation
 ```bash
-# Clone the repository
+# Clone the neural matrix repository
 git clone <repository-url>
-cd aws-architect-battle-arena
+cd Juego_Estudio_Arq_Soluciones
 
-# Install dependencies
+# Install neural dependencies
 npm install
 
-# Start the development server
-npm start
+# Build the React frontend
+cd client && npm install && npm run build && cd ..
+
+# Initiate neural protocol
+./start.sh
 ```
 
 ### Docker Deployment
@@ -80,28 +84,32 @@ docker-compose up -d
 docker-compose -f docker-compose.backend-only.yml up -d
 ```
 
-### Access the Game
-- **Main Application**: http://localhost:3030
-- **API Documentation**: http://localhost:3030/api/health
+### Access the Neural Matrix
+- **Main Neural Interface**: http://localhost:3030
+- **Game Protocol**: http://localhost:3030/game (requires neural authentication)
+- **API Health Check**: http://localhost:3030/api/health
+- **Neural Rankings**: http://localhost:3030/leaderboard
 
-## 📖 How to Play
+## 📖 Neural Protocol Guide
 
-### 1. Getting Started
-- **Guest Mode**: Start playing immediately without registration
-- **Account Mode**: Register for progress tracking and leaderboards
-- **Battle Selection**: Choose your difficulty and begin combat
+### 1. Initial Neural Connection
+- **Auto Test Mode**: Instant access on localhost for development testing
+- **Neural Interface Access**: Register for persistent progress and rankings
+- **Integrated Authentication**: Login/register directly from the main interface
+- **Character Selection**: Choose your cyber-architect persona
 
-### 2. Battle Mechanics
-- **Question Phase**: Read the AWS scenario carefully
-- **Attack Phase**: Select your answer to "attack" the problem
-- **Resolution**: Immediate feedback shows correct/incorrect
-- **Advancement**: Gain XP and progress to higher architect levels
+### 2. Combat Mechanics
+- **Scenario Analysis**: Process complex AWS cloud architecture challenges
+- **Neural Response**: Execute your solution through the neural interface
+- **Immediate Feedback**: Real-time validation with cyberpunk visual effects
+- **XP Acquisition**: Gain experience and level up your architect abilities
 
-### 3. Progression System
-- **Experience Points**: Earn 100 XP per correct answer
-- **Level Advancement**: Unlock new levels every 10 correct answers  
-- **Win Streaks**: Build momentum with consecutive victories
-- **Global Leaderboard**: Compete with architects worldwide
+### 3. Progression Matrix
+- **Experience Points**: Earn XP for successful neural transmissions
+- **Level Evolution**: Advance through cyber-architect ranks  
+- **Neural Streaks**: Build consecutive success chains for bonus rewards
+- **Global Neural Rankings**: Compete in the worldwide architect leaderboard
+- **Progress Persistence**: All advancement saved automatically to backend
 
 ## 🎯 AWS Exam Domains Coverage
 
@@ -135,36 +143,43 @@ docker-compose -f docker-compose.backend-only.yml up -d
 
 ## 🛠️ Development
 
-### Project Structure
+### Neural Project Structure
 ```
-aws-architect-battle-arena/
-├── client/
-│   └── build/
-│       └── index.html          # Modern single-page application
+Juego_Estudio_Arq_Soluciones/
+├── client/                     # React 18 Frontend
+│   ├── src/
+│   │   ├── components/         # Reusable UI components
+│   │   ├── contexts/           # AuthContext, GameContext, SoundContext
+│   │   ├── pages/              # HomePage, GamePage, etc.
+│   │   └── styles/             # styled-components theme
+│   ├── public/
+│   │   └── index.html          # Cyberpunk loading screen
+│   └── build/                  # Production build output
 ├── src/
 │   └── server/
-│       ├── index.js            # Express server + API routes
+│       ├── index.js            # Express API + JWT auth
 │       └── data/
-│           ├── questions.js    # Original question set
-│           └── questions_expanded.js  # 200+ professional questions
-├── docker-compose*.yml        # Multiple deployment options
-├── package.json               # Dependencies and scripts
-└── README.md                  # This file
+│           └── questions_expanded.js  # 65+ scenarios
+├── start.sh                    # Neural protocol launcher
+├── package.json               # Backend dependencies
+└── README.md                  # Neural documentation
 ```
 
 ### API Endpoints
 
-#### Authentication
-- `POST /api/auth/register` - Create new account
-- `POST /api/auth/login` - User authentication
-- `POST /api/auth/logout` - Session termination
+#### Neural Authentication
+- `POST /api/auth/register` - Create new neural profile
+- `POST /api/auth/login` - Neural interface authentication
+- `POST /api/auth/logout` - Disconnect neural link
 
-#### Game Management  
-- `POST /api/game/start-session` - Begin new game session
-- `GET /api/game/question/:sessionId` - Fetch next question
-- `POST /api/game/submit-answer` - Submit answer and get feedback
-- `GET /api/game/stats` - Retrieve user statistics
-- `GET /api/game/leaderboard` - Global leaderboard data
+#### Game Protocol Management  
+- `POST /api/game/start-session` - Initialize training protocol
+- `GET /api/game/question/:sessionId` - Retrieve next scenario
+- `POST /api/game/submit-answer` - Process neural response
+- `GET /api/game/stats` - Access neural performance metrics
+- `GET /api/game/leaderboard` - Global architect rankings
+- `POST /api/game/save-progress` - Persist neural advancement
+- `GET /api/game/load-progress` - Restore previous neural state
 
 #### Health & Monitoring
 - `GET /api/health` - Service health check
@@ -188,31 +203,34 @@ RATE_LIMIT_MAX=100
 
 ## 🔧 Configuration Options
 
-### Game Settings
-- **Question Pool Size**: Configurable question database
-- **Difficulty Scaling**: Adaptive question selection
-- **Time Limits**: Optional per-question time constraints
-- **Scoring System**: Customizable point values and bonuses
+### Neural Configuration
+- **Scenario Pool**: 65+ high-intensity AWS training scenarios
+- **Adaptive Intelligence**: Dynamic difficulty based on neural capacity
+- **Auto Test Mode**: Instant access for localhost development
+- **Progress Persistence**: Automatic save/load functionality
+- **Cyberpunk Theme**: Fully integrated neon aesthetic with particle effects
 
-### Security Features
-- **Content Security Policy**: Strict CSP for XSS protection
-- **Rate Limiting**: API endpoint protection
+### Neural Security Features
+- **Content Security Policy**: Strict CSP for neural interface protection
+- **Rate Limiting**: API endpoint protection against neural overload
 - **Input Validation**: Comprehensive request sanitization
-- **JWT Security**: Secure session management
+- **JWT Authentication**: Secure neural session management
+- **Dual Mode Access**: Test mode for development, secure mode for production
 
 ## 📊 Performance Metrics
 
-### Learning Effectiveness
-- **Question Coverage**: 200+ scenarios across all exam domains
-- **Difficulty Distribution**: 30% easy, 50% medium, 20% hard
-- **Pass Rate Correlation**: High correlation with actual exam success
-- **Retention Analytics**: Spaced repetition algorithm integration
+### Neural Training Effectiveness
+- **Scenario Coverage**: 65+ high-intensity scenarios across all AWS domains
+- **Adaptive Difficulty**: Dynamic scaling based on neural performance
+- **Certification Correlation**: Direct alignment with AWS Solutions Architect exam
+- **Progress Persistence**: Complete advancement tracking and restoration
 
-### Technical Performance
-- **Response Time**: <100ms average API response
-- **Concurrent Users**: Supports 1000+ simultaneous players
-- **Database Efficiency**: Optimized SQLite queries
-- **Memory Usage**: <50MB typical server footprint
+### Neural Matrix Performance
+- **Response Time**: <100ms neural transmission latency
+- **Concurrent Architects**: Supports 1000+ simultaneous neural connections
+- **Database Efficiency**: Optimized SQLite with progress persistence
+- **Memory Usage**: <50MB typical neural matrix footprint
+- **React Performance**: Optimized rendering with Context API state management
 
 ## 🤝 Contributing
 
@@ -318,7 +336,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Ready to become an AWS Solutions Architect?** 
-Start your battle at **http://localhost:3030** and master the cloud! ⚔️☁️
+**Ready to become a Cyber-Architect?** 
+Jack into the neural matrix at **http://localhost:3030** and master the cloud! 🤖⚡
 
-*Built with ❤️ for the AWS certification community*
+*Built with 🧠 for the cyberpunk AWS certification community*

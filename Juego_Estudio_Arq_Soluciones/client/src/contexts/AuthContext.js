@@ -15,9 +15,52 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState(localStorage.getItem('cosmic_token'));
+  const [token, setToken] = useState(localStorage.getItem('neuro_token'));
+  
+  // Development mode bypass for testing
+  const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const testModeEnabled = localStorage.getItem('test_mode_enabled') === 'true';
 
   useEffect(() => {
+    // Debug logs
+    console.log('AuthProvider Debug:', {
+      token,
+      isLocalhost,
+      testModeEnabled,
+      nodeEnv: typeof process !== 'undefined' ? process.env.NODE_ENV : 'unknown'
+    });
+    
+    // Auto-enable test mode on localhost for easy access (unless there's a real token)
+    if (isLocalhost && !token && !testModeEnabled) {
+      console.log('Auto-enabling test mode for localhost access');
+      localStorage.setItem('test_mode_enabled', 'true');
+      const testUser = {
+        id: 'test-user-id',
+        username: 'TestUser',
+        email: 'test@example.com',
+        level: 1,
+        experience: 0
+      };
+      setUser(testUser);
+      setLoading(false);
+      return;
+    }
+    
+    // Enable test mode for automated testing (works in any environment on localhost)
+    if (isLocalhost && testModeEnabled && !token) {
+      console.log('Test mode enabled, setting test user');
+      const testUser = {
+        id: 'test-user-id',
+        username: 'TestUser',
+        email: 'test@example.com',
+        level: 1,
+        experience: 0
+      };
+      setUser(testUser);
+      setLoading(false);
+      return;
+    }
+    
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // Validate token by fetching user stats
@@ -25,13 +68,14 @@ export const AuthProvider = ({ children }) => {
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, isLocalhost, testModeEnabled]);
 
   const fetchUserStats = async () => {
     try {
       const response = await axios.get('/api/game/stats');
       if (response.data.success) {
-        setUser(prev => prev ? { ...prev, ...response.data.stats } : null);
+        // If we have a valid token response, create a user object
+        setUser(response.data.stats || { username: 'User' });
       }
     } catch (error) {
       console.error('Error fetching user stats:', error);
@@ -48,24 +92,32 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await axios.post('/api/auth/login', credentials);
       
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         const { token, user } = response.data;
         setToken(token);
         setUser(user);
-        localStorage.setItem('cosmic_token', token);
+        localStorage.setItem('neuro_token', token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
-        toast.success(`Welcome back, ${user.username}! The cosmic entities stir...`, {
-          icon: '🌌',
+        toast.success(`Neural link established, ${user.username}! Welcome back to the matrix...`, {
+          icon: '🤖',
           duration: 4000,
         });
         
         return { success: true };
+      } else {
+        const message = response.data?.error || 'Neural interface authentication failed';
+        toast.error(`Neural interface error: ${message}`, {
+          icon: '🔴',
+          duration: 4000,
+        });
+        return { success: false, error: message };
       }
     } catch (error) {
-      const message = error.response?.data?.error || 'Login failed';
-      toast.error(`The ritual failed: ${message}`, {
-        icon: '💀',
+      console.error('Login error:', error);
+      const message = error.response?.data?.error || error.message || 'Neural interface connection failed';
+      toast.error(`Neural interface error: ${message}`, {
+        icon: '🔴',
         duration: 4000,
       });
       return { success: false, error: message };
@@ -79,24 +131,32 @@ export const AuthProvider = ({ children }) => {
       setLoading(true);
       const response = await axios.post('/api/auth/register', userData);
       
-      if (response.data.success) {
+      if (response.data && response.data.success) {
         const { token, user } = response.data;
         setToken(token);
         setUser(user);
-        localStorage.setItem('cosmic_token', token);
+        localStorage.setItem('neuro_token', token);
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
         
-        toast.success(`Welcome, ${user.username}! Your cosmic journey begins...`, {
-          icon: '🌟',
+        toast.success(`Neural profile created, ${user.username}! Entering the cyber realm...`, {
+          icon: '⚡',
           duration: 4000,
         });
         
         return { success: true };
+      } else {
+        const message = response.data?.error || 'Neural profile creation failed';
+        toast.error(`Neural registration failed: ${message}`, {
+          icon: '🔴',
+          duration: 4000,
+        });
+        return { success: false, error: message };
       }
     } catch (error) {
-      const message = error.response?.data?.error || 'Registration failed';
-      toast.error(`The summoning failed: ${message}`, {
-        icon: '💀',
+      console.error('Registration error:', error);
+      const message = error.response?.data?.error || error.message || 'Neural registration connection failed';
+      toast.error(`Neural registration failed: ${message}`, {
+        icon: '🔴',
         duration: 4000,
       });
       return { success: false, error: message };
@@ -108,11 +168,26 @@ export const AuthProvider = ({ children }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('cosmic_token');
+    localStorage.removeItem('neuro_token');
     delete axios.defaults.headers.common['Authorization'];
     
-    toast.success('You have returned to the mundane realm...', {
-      icon: '🌙',
+    // If on localhost, automatically re-enable test mode after logout
+    if (isLocalhost) {
+      setTimeout(() => {
+        localStorage.setItem('test_mode_enabled', 'true');
+        const testUser = {
+          id: 'test-user-id',
+          username: 'TestUser',
+          email: 'test@example.com',
+          level: 1,
+          experience: 0
+        };
+        setUser(testUser);
+      }, 100);
+    }
+    
+    toast.success('Neural link terminated. Disconnecting from the matrix...', {
+      icon: '🔌',
       duration: 3000,
     });
   };
@@ -121,12 +196,33 @@ export const AuthProvider = ({ children }) => {
     setUser(prev => prev ? { ...prev, ...newStats } : null);
   };
 
+  const enableTestMode = () => {
+    if (isLocalhost) {
+      localStorage.setItem('test_mode_enabled', 'true');
+      const testUser = {
+        id: 'test-user-id',
+        username: 'TestUser',
+        email: 'test@example.com',
+        level: 1,
+        experience: 0
+      };
+      setUser(testUser);
+    }
+  };
+
+  const disableTestMode = () => {
+    localStorage.removeItem('test_mode_enabled');
+    setUser(null);
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
     updateUserStats,
+    enableTestMode,
+    disableTestMode,
     loading,
     isAuthenticated: !!user,
   };

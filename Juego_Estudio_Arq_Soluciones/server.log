@@ -1,0 +1,140 @@
+{"level":"info","message":"Cosmic Codex server awakens on port 3030","timestamp":"2025-07-17T00:28:52.906Z"}
+🌌 The Architect's Codex server is running on port 3030
+🔮 The cosmic horror AWS study experience awaits...
+Load progress - req.user: {
+  userId: 3,
+  username: 'TestUser1752711891878',
+  iat: 1752711989,
+  exp: 1752798389
+}
+Load progress - userId: 3
+Database query result - user: {
+  level: 1,
+  experience: 0,
+  total_score: 0,
+  max_combo: 0,
+  games_played: 0,
+  total_questions: 0,
+  correct_answers: 0,
+  levels_completed: '[]',
+  achievements: '[]',
+  special_abilities: '{"fireball":{"unlocked":true,"level":1},"heal":{"unlocked":true,"level":1},"shield":{"unlocked":false,"level":0}}',
+  inventory: '[]',
+  settings: '{"sound":true,"music":true,"difficulty":"normal"}',
+  last_save: '2025-07-17 00:26:29'
+}
+::1 - - [17/Jul/2025:00:29:03 +0000] "GET /api/game/load-progress HTTP/1.1" 200 417 "-" "curl/8.7.1"
+::1 - - [17/Jul/2025:00:29:26 +0000] "POST /api/game/save-progress HTTP/1.1" 200 56 "-" "curl/8.7.1"
+Load progress - req.user: {
+  userId: 3,
+  username: 'TestUser1752711891878',
+  iat: 1752711989,
+  exp: 1752798389
+}
+Load progress - userId: 3
+Database query result - user: {
+  level: 2,
+  experience: 100,
+  total_score: 500,
+  max_combo: 0,
+  games_played: 0,
+  total_questions: 0,
+  correct_answers: 0,
+  levels_completed: '[]',
+  achievements: '[]',
+  special_abilities: '{}',
+  inventory: '[]',
+  settings: '{}',
+  last_save: '2025-07-17T00:29:26.915Z'
+}
+::1 - - [17/Jul/2025:00:29:34 +0000] "GET /api/game/load-progress HTTP/1.1" 200 268 "-" "curl/8.7.1"
+::1 - - [17/Jul/2025:00:30:28 +0000] "GET / HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:28 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 200 473379 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:29 +0000] "GET /manifest.json HTTP/1.1" 200 337 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:29 +0000] "GET /favicon.ico HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:32 +0000] "GET /register HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:32 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:32 +0000] "GET /manifest.json HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:30:32 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:39 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:39 +0000] "POST /api/auth/register HTTP/1.1" 200 324 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+Load progress - req.user: {
+  userId: 4,
+  username: 'FinalTestUser1752712233594',
+  iat: 1752712299,
+  exp: 1752798699
+}
+Load progress - userId: 4
+{"__augmented":true,"code":"SQLITE_ERROR","errno":1,"level":"error","message":"Stats retrieval error: SQLITE_ERROR: no such column: sanity_level","stack":"Error: SQLITE_ERROR: no such column: sanity_level\n--> in Database#get('SELECT sanity_level, knowledge_shards, current_level FROM users WHERE id = ?', [ 4 ], [Function (anonymous)])\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:428:6\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/route.js:149:13)\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:187:5\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:261:12\n    at getSecret (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:97:14)\n    at module.exports [as verify] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:101:10)\n    at authenticateToken (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:182:7)\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)","timestamp":"2025-07-17T00:31:39.209Z"}
+::1 - - [17/Jul/2025:00:31:39 +0000] "GET /api/game/stats HTTP/1.1" 500 36 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+Database query result - user: {
+  level: 1,
+  experience: 0,
+  total_score: 0,
+  max_combo: 0,
+  games_played: 0,
+  total_questions: 0,
+  correct_answers: 0,
+  levels_completed: '[]',
+  achievements: '[]',
+  special_abilities: '{"fireball":{"unlocked":true,"level":1},"heal":{"unlocked":true,"level":1},"shield":{"unlocked":false,"level":0}}',
+  inventory: '[]',
+  settings: '{"sound":true,"music":true,"difficulty":"normal"}',
+  last_save: '2025-07-17 00:31:39'
+}
+::1 - - [17/Jul/2025:00:31:39 +0000] "GET /api/game/load-progress HTTP/1.1" 200 417 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:39 +0000] "POST /api/game/start-session HTTP/1.1" 200 145 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:39 +0000] "GET /api/game/question/4e0ef4c1-6dbe-493c-911c-77feb15f9fd6? HTTP/1.1" 200 417 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:39 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:43 +0000] "GET /login HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:43 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+{"__augmented":true,"code":"SQLITE_ERROR","errno":1,"level":"error","message":"Stats retrieval error: SQLITE_ERROR: no such column: sanity_level","stack":"Error: SQLITE_ERROR: no such column: sanity_level\n--> in Database#get('SELECT sanity_level, knowledge_shards, current_level FROM users WHERE id = ?', [ 4 ], [Function (anonymous)])\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:428:6\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/route.js:149:13)\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:187:5\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:261:12\n    at getSecret (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:97:14)\n    at module.exports [as verify] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:101:10)\n    at authenticateToken (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:182:7)\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)","timestamp":"2025-07-17T00:31:43.967Z"}
+::1 - - [17/Jul/2025:00:31:43 +0000] "GET /api/game/stats HTTP/1.1" 500 36 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:43 +0000] "GET /manifest.json HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:44 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:46 +0000] "GET /login HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:46 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:46 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:31:46 +0000] "GET /manifest.json HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:46 +0000] "GET / HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:46 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 200 473379 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:46 +0000] "GET /manifest.json HTTP/1.1" 200 337 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:46 +0000] "GET /favicon.ico HTTP/1.1" 200 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:49 +0000] "GET /register HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:49 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:50 +0000] "GET /manifest.json HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:32:50 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:28 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:28 +0000] "POST /api/auth/register HTTP/1.1" 200 307 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+Load progress - req.user: {
+  userId: 5,
+  username: 'TestUser1752712369778',
+  iat: 1752712468,
+  exp: 1752798868
+}
+Load progress - userId: 5
+{"__augmented":true,"code":"SQLITE_ERROR","errno":1,"level":"error","message":"Stats retrieval error: SQLITE_ERROR: no such column: sanity_level","stack":"Error: SQLITE_ERROR: no such column: sanity_level\n--> in Database#get('SELECT sanity_level, knowledge_shards, current_level FROM users WHERE id = ?', [ 5 ], [Function (anonymous)])\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:428:6\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)\n    at next (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/route.js:149:13)\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:187:5\n    at /Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:261:12\n    at getSecret (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:97:14)\n    at module.exports [as verify] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/jsonwebtoken/verify.js:101:10)\n    at authenticateToken (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/src/server/index.js:182:7)\n    at Layer.handle [as handle_request] (/Users/A1064331/Desktop/AWS/Claude/Juego_Estudio_Arq_Soluciones/node_modules/express/lib/router/layer.js:95:5)","timestamp":"2025-07-17T00:34:28.999Z"}
+::1 - - [17/Jul/2025:00:34:29 +0000] "GET /api/game/stats HTTP/1.1" 500 36 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+Database query result - user: {
+  level: 1,
+  experience: 0,
+  total_score: 0,
+  max_combo: 0,
+  games_played: 0,
+  total_questions: 0,
+  correct_answers: 0,
+  levels_completed: '[]',
+  achievements: '[]',
+  special_abilities: '{"fireball":{"unlocked":true,"level":1},"heal":{"unlocked":true,"level":1},"shield":{"unlocked":false,"level":0}}',
+  inventory: '[]',
+  settings: '{"sound":true,"music":true,"difficulty":"normal"}',
+  last_save: '2025-07-17 00:34:28'
+}
+::1 - - [17/Jul/2025:00:34:29 +0000] "GET /api/game/load-progress HTTP/1.1" 200 417 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:29 +0000] "POST /api/game/start-session HTTP/1.1" 200 145 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:29 +0000] "GET /api/game/question/1da3e24f-202d-425b-83da-987c502a0803? HTTP/1.1" 200 394 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:29 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:33 +0000] "GET /login HTTP/1.1" 200 3459 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:34 +0000] "GET /static/js/main.e7c07c67.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:34 +0000] "GET /favicon.ico HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"
+::1 - - [17/Jul/2025:00:34:34 +0000] "GET /manifest.json HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36"

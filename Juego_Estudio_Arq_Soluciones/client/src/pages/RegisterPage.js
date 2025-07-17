@@ -39,17 +39,29 @@ const RegisterPage = () => {
     }
 
     try {
+      console.log('Attempting registration...');
       const result = await register({
         username: formData.username,
         email: formData.email,
         password: formData.password
       });
       
+      console.log('Registration result:', result);
+      
       if (result.success) {
         playSound('correct');
-        navigate('/game');
+        console.log('Registration successful, navigating to game...');
+        // Add a small delay to ensure auth context updates
+        setTimeout(() => {
+          navigate('/game');
+        }, 100);
+      } else {
+        setError(result.error || 'Registration failed');
+        playSound('incorrect');
       }
     } catch (error) {
+      console.error('Registration error:', error);
+      setError('Registration failed. Please try again.');
       playSound('incorrect');
     } finally {
       setLoading(false);

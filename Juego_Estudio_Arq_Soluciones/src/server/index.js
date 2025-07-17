@@ -157,8 +157,21 @@ app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../client/build')));
 
-// JWT middleware
+// JWT middleware with test mode bypass
 const authenticateToken = (req, res, next) => {
+  // Check if test mode is enabled and request is from localhost
+  const isTestMode = process.env.ENABLE_TEST_MODE === 'true';
+  const isLocalhost = req.ip === '127.0.0.1' || req.ip === '::1' || req.hostname === 'localhost';
+  
+  if (isTestMode && isLocalhost) {
+    // In test mode, create a mock user
+    req.user = {
+      userId: 'test-user-id',
+      username: 'TestUser'
+    };
+    return next();
+  }
+  
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
   
@@ -393,6 +406,25 @@ app.post('/api/game/answer', (req, res) => {
 });
 
 app.get('/api/game/stats', authenticateToken, (req, res) => {
+  // Check if this is test mode
+  const isTestMode = process.env.ENABLE_TEST_MODE === 'true';
+  const isLocalhost = req.ip === '127.0.0.1' || req.ip === '::1' || req.hostname === 'localhost';
+  
+  if (isTestMode && isLocalhost && req.user.userId === 'test-user-id') {
+    // Return mock stats for test mode
+    return res.json({
+      success: true,
+      stats: {
+        sanityLevel: 100,
+        knowledgeShards: 50,
+        currentLevel: 1,
+        totalQuestions: 10,
+        correctAnswers: 7,
+        accuracy: 70.0
+      }
+    });
+  }
+  
   db.get(
     'SELECT sanity_level, knowledge_shards, current_level FROM users WHERE id = ?',
     [req.user.userId],

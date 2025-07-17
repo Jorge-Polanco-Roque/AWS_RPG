@@ -10,6 +10,8 @@
     "build": "cd client && npm run build",
     "start": "node src/server/index.js",
     "install:all": "npm install && cd client && npm install",
+    "test:game-page": "node test-game-page.js",
+    "test:game-page-complete": "node test-game-page-complete.js",
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"

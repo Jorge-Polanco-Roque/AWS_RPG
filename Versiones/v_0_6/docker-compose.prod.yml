@@ -1,0 +1,88 @@
+version: '3.8'
+
+services:
+  architects-codex:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: architects-codex-app
+    ports:
+      - "3030:3030"
+    environment:
+      - NODE_ENV=production
+      - PORT=3030
+      - JWT_SECRET=${JWT_SECRET:-cosmic_horror_secret_key_change_in_production}
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3030/api/game/cosmic-entities"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - cosmic-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: architects-codex-db
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-cosmic_codex}
+      - POSTGRES_USER=${POSTGRES_USER:-cosmic_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-cosmic_password_change_in_production}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-cosmic_user} -d ${POSTGRES_DB:-cosmic_codex}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - cosmic-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: architects-codex-redis
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    networks:
+      - cosmic-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: architects-codex-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - architects-codex
+    restart: unless-stopped
+    networks:
+      - cosmic-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  cosmic-network:
+    driver: bridge
